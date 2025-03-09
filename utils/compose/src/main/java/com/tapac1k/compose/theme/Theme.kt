@@ -1,4 +1,4 @@
-package com.tapac1k.tapmyday.ui.theme
+package com.tapac1k.compose.theme
 
 import android.app.Activity
 import android.os.Build

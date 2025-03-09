@@ -10,9 +10,24 @@ android {
     defaultConfig {
         minSdk = rootProject.ext["minSdk"] as Int
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
+configureComposeDependencies()
+
 dependencies {
+    implementation(project(":auth:contract-ui"))
+    implementation(project(":utils:compose"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -10,9 +10,19 @@ android {
     defaultConfig {
         minSdk = rootProject.ext["minSdk"] as Int
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
 
+configureComposeDependencies()
+
 dependencies {
+    implementation(project(":main:contract-ui"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

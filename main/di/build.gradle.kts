@@ -1,15 +1,24 @@
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 }
 
 android {
-    namespace = "com.tapac1k.compose"
-    compileSdk = rootProject.ext["compileSdk"] as Int
+    namespace = "com.tapac1k.main.di"
+    compileSdk = 35
 
     defaultConfig {
-        minSdk = rootProject.ext["minSdk"] as Int
+        minSdk = 31
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -18,15 +27,14 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-
-    buildFeatures {
-        compose = true
-    }
 }
 
-configureComposeDependencies(Target.UTILS)
+hilt()
 
 dependencies {
+    api(project(":main:contract-ui"))
+    api(project(":main:presentation"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

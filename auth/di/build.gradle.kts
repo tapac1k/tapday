@@ -1,11 +1,10 @@
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 }
 
 android {
-    namespace = "com.tapac1k.compose"
+    namespace = "com.tapac1k.auth.di"
     compileSdk = rootProject.ext["compileSdk"] as Int
 
     defaultConfig {
@@ -18,15 +17,13 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-
-    buildFeatures {
-        compose = true
-    }
 }
 
-configureComposeDependencies(Target.UTILS)
-
+hilt()
 dependencies {
+    api(project(":auth:contract-ui"))
+    api(project(":auth:presentation"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
