@@ -13,8 +13,14 @@
 .externalNativeBuild
 .cxx
 local.properties
+*/*/build/
 /app/src/main/res/xml/backup_rules.xml
 /.idea/deploymentTargetSelector.xml
 /buildSrc/build/
 /.kotlin/errors/errors-1741522423764.log
 /.kotlin/errors/errors-1741522458042.log
+/.kotlin/errors/errors-1741632327378.log
+/.kotlin/errors/errors-1741632422905.log
+/.kotlin/errors/errors-1741632506079.log
+/.kotlin/errors/errors-1741632682005.log
+/.kotlin/errors/errors-1741632756671.log
