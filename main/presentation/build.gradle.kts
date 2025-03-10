@@ -25,6 +25,10 @@ configureComposeDependencies()
 dependencies {
     implementation(project(":main:contract-ui"))
     implementation(project(":auth:contract"))
+
+    implementation(project(":day-list:contract-ui"))
+    implementation(project(":settings:contract-ui"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

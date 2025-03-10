@@ -1,21 +1,27 @@
 package com.tapac1k.presentation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavOptions
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.tapac1k.compose.theme.TapMyDayTheme
+import com.tapac1k.day_list.contract_ui.DayListRouter
+import com.tapac1k.settings.contract_ui.SettingsRouter
+import dagger.Lazy
 
 @Composable
 fun MainScreen(
     viewModel: MainViewModel = viewModel(),
+    dayListRouter: Lazy<DayListRouter>? = null,
+    settingsRouter: Lazy<SettingsRouter>? = null,
     onLoggedOut: () -> Unit,
 ) {
     Surface(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
@@ -27,22 +33,31 @@ fun MainScreen(
             }
         }
         MainScreenContent(
-            onLogoutClick = viewModel::logout,
+            dayListRouter,
+            settingsRouter,
         )
     }
 }
 
 @Composable
 fun MainScreenContent(
-    onSettingClick: () -> Unit = {},
-    onLogoutClick: () -> Unit = {},
+    dayListRouter: Lazy<DayListRouter>? = null,
+    settingsRouter: Lazy<SettingsRouter>? = null,
 ) {
-    Column {
-        Button(onClick = onSettingClick) {
-            Text("Settings")
+    val navController = rememberNavController()
+    val startRoute = "day-list"
+    NavHost(navController, startDestination = startRoute) {
+        composable("day-list") { backStackEntry ->
+            dayListRouter?.get()?.NavigateDayList(
+                onSettings = {
+                    navController.navigate("settings")
+                },
+                openDay = {
+
+                })
         }
-        Button(onClick = onLogoutClick) {
-            Text("Logout")
+        composable("settings") { navBackStackEntry ->
+            settingsRouter?.get()?.NavigateToSettings()
         }
     }
 }

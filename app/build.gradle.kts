@@ -45,6 +45,8 @@ hilt()
 dependencies {
     implementation(project(":auth:di"))
     implementation(project(":main:di"))
+    implementation(project(":day-list:di"))
+    implementation(project(":settings:di"))
     implementation(project(":utils:compose"))
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.common)
@@ -55,7 +57,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-
+    implementation(libs.androidx.lifecycle.runtime.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

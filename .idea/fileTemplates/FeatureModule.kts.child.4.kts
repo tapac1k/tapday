@@ -4,13 +4,21 @@ plugins {
 }
 
 android {
-    namespace = "com.tapac1k.${FEATURE_NAME_UNDERSCORE}.data"
+    namespace = "com.tapac1k.${FEATURE_NAME_UNDERSCORE}.domain"
     compileSdk = 35
 
-    compileSdk = rootProject.ext["compileSdk"] as Int
-
     defaultConfig {
-        minSdk = rootProject.ext["minSdk"] as Int
+        minSdk = 31
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -21,17 +29,11 @@ android {
     }
 }
 
-hilt()
-
 dependencies {
-    implementation(project(":utils:common"))
-    implementation(project(":${FEATURE_NAME:contract"))
-    implementation(project(":${FEATURE_NAME:domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-	
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

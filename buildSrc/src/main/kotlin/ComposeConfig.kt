@@ -31,5 +31,6 @@ fun Project.configureComposeDependencies(
         if (target == Target.UTILS) return@dependencies
 
         add("implementation", project(":utils:compose"))
+        libs.findLibrary("androidx.lifecycle.runtime.compose").get().let { add("implementation", it) }
     }
 }

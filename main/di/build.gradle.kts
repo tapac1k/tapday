@@ -34,6 +34,10 @@ hilt()
 dependencies {
     api(project(":main:contract-ui"))
     api(project(":main:presentation"))
+    implementation(project(":auth:contract"))
+
+    implementation(project(":day-list:contract-ui"))
+    implementation(project(":settings:contract-ui"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

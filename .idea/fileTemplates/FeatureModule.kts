@@ -40,7 +40,6 @@ dependencies {
     implementation(project(":${FEATURE_NAME}:contract"))
     implementation(project(":${FEATURE_NAME}:domain"))
 
-    implementation(project(":integration:firebase"))
     implementation(project(":utils:compose"))
 
     implementation(libs.androidx.core.ktx)

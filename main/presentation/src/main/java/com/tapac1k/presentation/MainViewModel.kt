@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tapac1k.auth.contract.LogoutUseCase
 import com.tapac1k.auth.contract.OnLogoutFlowUseCase
+import com.tapac1k.day_list.contract_ui.DayListRouter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val onLogoutFlowUseCase: OnLogoutFlowUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
 ): ViewModel() {
     private val _events = MutableSharedFlow<MainEvent>()
     val events = _events.asSharedFlow()
@@ -27,9 +28,5 @@ class MainViewModel @Inject constructor(
                 _events.emit(MainEvent.LoggedOut)
             }
         }
-    }
-
-    fun logout() {
-       logoutUseCase.invoke()
     }
 }
