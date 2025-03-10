@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.provider.FontsContractCompat.Columns
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tapac1k.compose.theme.TapMyDayTheme
 

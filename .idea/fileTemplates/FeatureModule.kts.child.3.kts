@@ -4,13 +4,21 @@ plugins {
 }
 
 android {
-    namespace = "com.tapac1k.auth.data"
+    namespace = "com.tapac1k.${FEATURE_NAME_UNDERSCORE}.domain"
     compileSdk = 35
 
-    compileSdk = rootProject.ext["compileSdk"] as Int
-
     defaultConfig {
-        minSdk = rootProject.ext["minSdk"] as Int
+        minSdk = 31
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -21,18 +29,7 @@ android {
     }
 }
 
-hilt()
-
 dependencies {
-    implementation(project(":utils:common"))
-    implementation(project(":auth:contract"))
-    implementation(project(":auth:domain"))
-
-    implementation(libs.firebase.auth)
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.androidx.credentials)
-    implementation(libs.googleid)
-    implementation(libs.androidx.credentials.play.services.auth)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

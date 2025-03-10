@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExportableFileTemplateSettings">
+    <default_templates>
+      <template name="FeatureModule.kts" file-name="${FEATURE_NAME}/presentation/build.gradle" reformat="true" live-template-enabled="false">
+        <template name="FeatureModule.kts.child.0.kt" file-name="#set($FEATURE_NAME_UNDERSCORE=$FEATURE_NAME.replaceAll(&quot;-&quot;, &quot;_&quot;))${FEATURE_NAME}/contract-ui/src/main/java/me/tango/${FEATURE_NAME_UNDERSCORE}/contract-ui/${CONTRACT_UI_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.1.kt" file-name="#set($FEATURE_NAME_UNDERSCORE=$FEATURE_NAME.replaceAll(&amp;quot;-&amp;quot;, &amp;quot;_&amp;quot;))${FEATURE_NAME}/contract/src/main/java/me/tango/${FEATURE_NAME_UNDERSCORE}/contract/${CONTRACT_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.2.kt" file-name="#set($FEATURE_NAME_UNDERSCORE= $FEATURE_NAME.replaceAll(&amp;quot;-&amp;quot;, &amp;quot;_&amp;quot;))${FEATURE_NAME}/data/src/main/java/me/tango/${FEATURE_NAME_UNDERSCORE}/data/${DATA_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.3.kts" file-name="${FEATURE_NAME}/domain/build.gradle" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.4.kts" file-name="${FEATURE_NAME}/data/build.gradle" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.5.kt" file-name="#set($FEATURE_NAME_UNDERSCORE=$FEATURE_NAME.replaceAll(&amp;quot;-&amp;quot;, &amp;quot;_&amp;quot;))${FEATURE_NAME}/presentation/src/test/java/me/tango/${FEATURE_NAME_UNDERSCORE}/presentation/${PRESENTATION_INITIAL_CLASS}Test" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.6.kt" file-name="#set($FEATURE_NAME_UNDERSCORE=$FEATURE_NAME.replaceAll(&amp;quot;-&amp;quot;, &amp;quot;_&amp;quot;))${FEATURE_NAME}/domain/src/main/java/me/tango/${FEATURE_NAME_UNDERSCORE}/domain/${DOMAIN_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.7.kts" file-name="${FEATURE_NAME}/contract-ui/build.gradle" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.8.kts" file-name="${FEATURE_NAME}/contract/build.gradle" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.9.kt" file-name="#set($FEATURE_NAME_UNDERSCORE= $FEATURE_NAME.replaceAll(&quot;-&quot;, &quot;_&quot;))${FEATURE_NAME}/domain/src/main/java/me/tango/${FEATURE_NAME_UNDERSCORE}/domain/${DOMAIN_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.10.kt" file-name="#set($FEATURE_NAME_UNDERSCORE= $FEATURE_NAME.replaceAll(&quot;-&quot;, &quot;_&quot;))${FEATURE_NAME}/data/src/test/java/me/tango/${FEATURE_NAME_UNDERSCORE}/data/${DATA_INITIAL_CLASS}Test" reformat="true" live-template-enabled="false" />
+      </template>
+      <template name="FeatureModule.kts.child.0.kt" file-name="#set($FEATURE_NAME_UNDERSCORE=$FEATURE_NAME.replaceAll(&quot;-&quot;, &quot;_&quot;))${FEATURE_NAME}/contract-ui/src/main/java/me/tango/${FEATURE_NAME_UNDERSCORE}/contract-ui/${CONTRACT_UI_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.1.kt" file-name="#set($FEATURE_NAME_UNDERSCORE=$FEATURE_NAME.replaceAll(&amp;quot;-&amp;quot;, &amp;quot;_&amp;quot;))${FEATURE_NAME}/contract/src/main/java/me/tango/${FEATURE_NAME_UNDERSCORE}/contract/${CONTRACT_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.10.kt" file-name="#set($FEATURE_NAME_UNDERSCORE= $FEATURE_NAME.replaceAll(&quot;-&quot;, &quot;_&quot;))${FEATURE_NAME}/data/src/test/java/me/tango/${FEATURE_NAME_UNDERSCORE}/data/${DATA_INITIAL_CLASS}Test" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.2.kt" file-name="#set($FEATURE_NAME_UNDERSCORE= $FEATURE_NAME.replaceAll(&amp;quot;-&amp;quot;, &amp;quot;_&amp;quot;))${FEATURE_NAME}/data/src/main/java/me/tango/${FEATURE_NAME_UNDERSCORE}/data/${DATA_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.3.kts" file-name="${FEATURE_NAME}/domain/build.gradle" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.4.kts" file-name="${FEATURE_NAME}/data/build.gradle" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.5.kt" file-name="#set($FEATURE_NAME_UNDERSCORE=$FEATURE_NAME.replaceAll(&amp;quot;-&amp;quot;, &amp;quot;_&amp;quot;))${FEATURE_NAME}/presentation/src/test/java/me/tango/${FEATURE_NAME_UNDERSCORE}/presentation/${PRESENTATION_INITIAL_CLASS}Test" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.6.kt" file-name="#set($FEATURE_NAME_UNDERSCORE=$FEATURE_NAME.replaceAll(&amp;quot;-&amp;quot;, &amp;quot;_&amp;quot;))${FEATURE_NAME}/domain/src/main/java/me/tango/${FEATURE_NAME_UNDERSCORE}/domain/${DOMAIN_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.7.kts" file-name="${FEATURE_NAME}/contract-ui/build.gradle" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.8.kts" file-name="${FEATURE_NAME}/contract/build.gradle" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.9.kt" file-name="#set($FEATURE_NAME_UNDERSCORE= $FEATURE_NAME.replaceAll(&quot;-&quot;, &quot;_&quot;))${FEATURE_NAME}/domain/src/main/java/me/tango/${FEATURE_NAME_UNDERSCORE}/domain/${DOMAIN_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+    </default_templates>
+  </component>
+</project>

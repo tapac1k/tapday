@@ -1,0 +1,6 @@
+#set($FEATURE_NAME_UNDERSCORE= $FEATURE_NAME.replaceAll("-", "_"))
+package me.tango.${FEATURE_NAME_UNDERSCORE}.presentation
+
+class ${PRESENTATION_INITIAL_CLASS}Test {
+
+}
