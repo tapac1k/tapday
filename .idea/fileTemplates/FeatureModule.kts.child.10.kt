@@ -1,6 +1,5 @@
-#set($FEATURE_NAME_UNDERSCORE= $FEATURE_NAME.replaceAll("-", "_"))
-package me.tango.${FEATURE_NAME_UNDERSCORE}.presentation
+package com.tapac1k.${FEATURE_NAME_UNDERSCORE}.data
 
-class ${PRESENTATION_INITIAL_CLASS} {
+class ${DATA_INITIAL_CLASS}Test {
 
 }
