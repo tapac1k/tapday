@@ -22,6 +22,7 @@ fun Project.configureComposeDependencies(
         if (target == Target.CONTRACT) return@dependencies
 
         libs.findLibrary("androidx.hilt.navigation.compose").get().let { add("implementation", it) }
+        libs.findLibrary("androidx.material.icons.extended").get().let { add("implementation", it) }
         libs.findLibrary("androidx.navigation.compose").get().let { add("implementation", it) }
         libs.findLibrary("androidx.ui.tooling.preview").get().let { add("implementation", it) }
         libs.findLibrary("material").get().let { add("implementation", it) }

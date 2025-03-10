@@ -24,9 +24,14 @@ android {
 }
 
 configureComposeDependencies()
+hilt()
 
 dependencies {
     implementation(project(":auth:contract-ui"))
+    implementation(project(":auth:contract"))
+    implementation(project(":auth:domain"))
+
+    implementation(project(":integration:firebase"))
     implementation(project(":utils:compose"))
 
     implementation(libs.androidx.core.ktx)
@@ -35,4 +40,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    debugImplementation(libs.ui.tooling)
 }

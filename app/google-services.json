@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1021436916560",
+    "project_id": "tapday-1173f",
+    "storage_bucket": "tapday-1173f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021436916560:android:77b0b77c488cb4d8feb255",
+        "android_client_info": {
+          "package_name": "com.tapac1k.tapmyday"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021436916560-53kb6deuq24n4cb2o77m93pfak32t864.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tapac1k.tapmyday",
+            "certificate_hash": "cc1e9b00c80c63c544e88df3d117b1fdb44d0420"
+          }
+        },
+        {
+          "client_id": "1021436916560-db7vi7hu8s9nj8kqp62d206ave0c8t9v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOFkFwoXVt787Rp-VmfNfJnf4BywTNN7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1021436916560-db7vi7hu8s9nj8kqp62d206ave0c8t9v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -23,6 +23,9 @@ hilt()
 dependencies {
     api(project(":auth:contract-ui"))
     api(project(":auth:presentation"))
+    api(project(":auth:contract"))
+    api(project(":auth:domain"))
+    api(project(":auth:data"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

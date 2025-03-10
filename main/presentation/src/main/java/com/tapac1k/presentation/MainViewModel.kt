@@ -3,6 +3,9 @@ package com.tapac1k.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tapac1k.auth.contract.LogoutUseCase
+import com.tapac1k.auth.contract.OnLogoutFlowUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,16 +13,23 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(): ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val onLogoutFlowUseCase: OnLogoutFlowUseCase,
+    private val logoutUseCase: LogoutUseCase
+): ViewModel() {
     private val _events = MutableSharedFlow<MainEvent>()
     val events = _events.asSharedFlow()
 
     init {
-        Log.d("TestX", "init MainViewModel $this")
+        viewModelScope.launch {
+            onLogoutFlowUseCase.invoke().collect {
+                _events.emit(MainEvent.LoggedOut)
+            }
+        }
     }
 
-    fun logout() = viewModelScope.launch{
-       delay(100)
-        _events.emit(MainEvent.LoggedOut)
+    fun logout() {
+       logoutUseCase.invoke()
     }
 }

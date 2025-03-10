@@ -4,7 +4,9 @@ plugins {
 }
 
 android {
-    namespace = "com.tapac1k.presentation"
+    namespace = "com.tapac1k.auth.data"
+    compileSdk = 35
+
     compileSdk = rootProject.ext["compileSdk"] as Int
 
     defaultConfig {
@@ -20,11 +22,20 @@ android {
 }
 
 hilt()
-configureComposeDependencies()
 
 dependencies {
-    implementation(project(":main:contract-ui"))
+
+    // Import the Firebase BoM
+    implementation(project(":utils:common"))
     implementation(project(":auth:contract"))
+    implementation(project(":auth:domain"))
+
+    implementation(libs.firebase.auth)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.androidx.credentials)
+    implementation(libs.googleid)
+    implementation(libs.androidx.credentials.play.services.auth)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

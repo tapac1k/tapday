@@ -3,6 +3,7 @@ import org.gradle.internal.extensions.core.extra
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -45,6 +46,8 @@ dependencies {
     implementation(project(":auth:di"))
     implementation(project(":main:di"))
     implementation(project(":utils:compose"))
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.common)
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)

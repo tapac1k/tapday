@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.tapac1k.presentation"
+    namespace = "com.tapac1k.firebase"
     compileSdk = rootProject.ext["compileSdk"] as Int
 
     defaultConfig {
@@ -20,11 +20,17 @@ android {
 }
 
 hilt()
-configureComposeDependencies()
 
 dependencies {
-    implementation(project(":main:contract-ui"))
-    implementation(project(":auth:contract"))
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.androidx.credentials)
+    implementation(libs.googleid)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.common)
+    implementation(libs.firebase.common.ktx)
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
