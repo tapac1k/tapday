@@ -4,21 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.tapac1k.${FEATURE_NAME_UNDERSCORE}.domain"
-    compileSdk = 35
+    namespace = "com.tapac1k.day.presentation"
+    compileSdk = rootProject.ext["compileSdk"] as Int
 
     defaultConfig {
-        minSdk = 31
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
+        minSdk = rootProject.ext["minSdk"] as Int
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -27,9 +17,21 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
+configureComposeDependencies()
+hilt()
+
 dependencies {
+    implementation(project(":day:contract-ui"))
+    implementation(project(":day:contract"))
+    implementation(project(":day:domain"))
+
+    implementation(project(":utils:compose"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -37,4 +39,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    debugImplementation(libs.ui.tooling)
 }

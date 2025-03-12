@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -27,8 +28,11 @@ dependencies {
     implementation(project(":auth:contract"))
 
     implementation(project(":day-list:contract-ui"))
+    implementation(project(":day:contract-ui"))
+    implementation(project(":day:contract"))
     implementation(project(":settings:contract-ui"))
 
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

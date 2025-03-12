@@ -4,5 +4,5 @@ import androidx.compose.runtime.Composable
 
 interface SettingsRouter {
     @Composable
-    fun NavigateToSettings()
+    fun NavigateToSettings(settingsNavigation: SettingsNavigation)
 }

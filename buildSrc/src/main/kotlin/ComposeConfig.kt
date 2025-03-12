@@ -27,6 +27,7 @@ fun Project.configureComposeDependencies(
         libs.findLibrary("androidx.ui.tooling.preview").get().let { add("implementation", it) }
         libs.findLibrary("material").get().let { add("implementation", it) }
         libs.findLibrary("androidx.material3").get().let { add("implementation", it) }
+        libs.findLibrary("ui.tooling").get().let { add("debugImplementation", it) }
 
         if (target == Target.UTILS) return@dependencies
 

@@ -34,6 +34,8 @@ dependencies {
     implementation(project(":day-list:contract"))
     implementation(project(":day-list:domain"))
 
+    implementation(project(":day:contract"))
+
     implementation(project(":utils:compose"))
 
     implementation(libs.androidx.core.ktx)

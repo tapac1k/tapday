@@ -2,32 +2,34 @@
 <project version="4">
   <component name="ExportableFileTemplateSettings">
     <default_templates>
-      <template name="FeatureModule.kts" file-name="${FEATURE_NAME}/presentation/build.gradle" reformat="true" live-template-enabled="false">
-        <template name="FeatureModule.kts.child.11.kts" file-name="./${FEATURE_NAME}/di/build.gradle" reformat="true" live-template-enabled="false" />
-        <template name="FeatureModule.kts.child.0.kt" file-name="./${FEATURE_NAME}/contract-ui/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/contract_ui/${CONTRACT_UI_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
-        <template name="FeatureModule.kts.child.1.kt" file-name="./${FEATURE_NAME}/contract/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/contract/${CONTRACT_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
-        <template name="FeatureModule.kts.child.2.kt" file-name="./${FEATURE_NAME}/presentation/src/test/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/presentation/${PRESENTATION_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
-        <template name="FeatureModule.kts.child.3.kt" file-name="./${FEATURE_NAME}/data/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/data/${DATA_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
-        <template name="FeatureModule.kts.child.4.kts" file-name="./${FEATURE_NAME}/domain/build.gradle" reformat="true" live-template-enabled="false" />
-        <template name="FeatureModule.kts.child.5.kts" file-name="./${FEATURE_NAME}/data/build.gradle" reformat="true" live-template-enabled="false" />
-        <template name="FeatureModule.kts.child.6.kt" file-name="./${FEATURE_NAME}/presentation/src/test/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/presentation/${PRESENTATION_INITIAL_CLASS}Test" reformat="true" live-template-enabled="false" />
-        <template name="FeatureModule.kts.child.7.kt" file-name="./${FEATURE_NAME}/domain/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/domain/${DOMAIN_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
-        <template name="FeatureModule.kts.child.8.kts" file-name="./${FEATURE_NAME}/contract-ui/build.gradle" reformat="true" live-template-enabled="false" />
-        <template name="FeatureModule.kts.child.9.kts" file-name="./${FEATURE_NAME}/contract/build.gradle" reformat="true" live-template-enabled="false" />
-        <template name="FeatureModule.kts.child.10.kt" file-name="./${FEATURE_NAME}/domain/src/test/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/domain/${DOMAIN_INITIAL_CLASS}Test" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts" file-name="../${FEATURE_NAME}/presentation/build.gradle" reformat="true" live-template-enabled="false">
+        <template name="FeatureModule.kts.child.12.java" file-name="../${FEATURE_NAME}/di/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/di/${DI_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.0.kts" file-name="../${FEATURE_NAME}/di/build.gradle" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.1.kt" file-name="../${FEATURE_NAME}/contract-ui/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/contract_ui/${CONTRACT_UI_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.2.kt" file-name="../${FEATURE_NAME}/contract/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/contract/${CONTRACT_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.3.kt" file-name="../${FEATURE_NAME}/presentation/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/presentation/${PRESENTATION_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.4.kt" file-name="../${FEATURE_NAME}/data/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/data/${DATA_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.5.kts" file-name="../${FEATURE_NAME}/domain/build.gradle" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.6.kts" file-name="../${FEATURE_NAME}/data/build.gradle" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.7.kt" file-name="../${FEATURE_NAME}/presentation/src/test/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/presentation/${PRESENTATION_INITIAL_CLASS}Test" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.8.kt" file-name="../${FEATURE_NAME}/domain/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/domain/${DOMAIN_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.9.kts" file-name="../${FEATURE_NAME}/contract-ui/build.gradle" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.10.kts" file-name="../${FEATURE_NAME}/contract/build.gradle" reformat="true" live-template-enabled="false" />
+        <template name="FeatureModule.kts.child.11.kt" file-name="../${FEATURE_NAME}/domain/src/test/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/domain/${DOMAIN_INITIAL_CLASS}Test" reformat="true" live-template-enabled="false" />
       </template>
-      <template name="FeatureModule.kts.child.0.kt" file-name="./${FEATURE_NAME}/contract-ui/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/contract_ui/${CONTRACT_UI_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
-      <template name="FeatureModule.kts.child.1.kt" file-name="./${FEATURE_NAME}/contract/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/contract/${CONTRACT_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
-      <template name="FeatureModule.kts.child.10.kt" file-name="./${FEATURE_NAME}/domain/src/test/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/domain/${DOMAIN_INITIAL_CLASS}Test" reformat="true" live-template-enabled="false" />
-      <template name="FeatureModule.kts.child.11.kts" file-name="./${FEATURE_NAME}/di/build.gradle" reformat="true" live-template-enabled="false" />
-      <template name="FeatureModule.kts.child.2.kt" file-name="./${FEATURE_NAME}/presentation/src/test/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/presentation/${PRESENTATION_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
-      <template name="FeatureModule.kts.child.3.kt" file-name="./${FEATURE_NAME}/data/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/data/${DATA_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
-      <template name="FeatureModule.kts.child.4.kts" file-name="./${FEATURE_NAME}/domain/build.gradle" reformat="true" live-template-enabled="false" />
-      <template name="FeatureModule.kts.child.5.kts" file-name="./${FEATURE_NAME}/data/build.gradle" reformat="true" live-template-enabled="false" />
-      <template name="FeatureModule.kts.child.6.kt" file-name="./${FEATURE_NAME}/presentation/src/test/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/presentation/${PRESENTATION_INITIAL_CLASS}Test" reformat="true" live-template-enabled="false" />
-      <template name="FeatureModule.kts.child.7.kt" file-name="./${FEATURE_NAME}/domain/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/domain/${DOMAIN_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
-      <template name="FeatureModule.kts.child.8.kts" file-name="./${FEATURE_NAME}/contract-ui/build.gradle" reformat="true" live-template-enabled="false" />
-      <template name="FeatureModule.kts.child.9.kts" file-name="./${FEATURE_NAME}/contract/build.gradle" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.0.kts" file-name="../${FEATURE_NAME}/di/build.gradle" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.1.kt" file-name="../${FEATURE_NAME}/contract-ui/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/contract_ui/${CONTRACT_UI_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.10.kts" file-name="../${FEATURE_NAME}/contract/build.gradle" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.11.kt" file-name="../${FEATURE_NAME}/domain/src/test/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/domain/${DOMAIN_INITIAL_CLASS}Test" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.12.java" file-name="../${FEATURE_NAME}/di/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/di/${DI_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.2.kt" file-name="../${FEATURE_NAME}/contract/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/contract/${CONTRACT_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.3.kt" file-name="../${FEATURE_NAME}/presentation/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/presentation/${PRESENTATION_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.4.kt" file-name="../${FEATURE_NAME}/data/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/data/${DATA_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.5.kts" file-name="../${FEATURE_NAME}/domain/build.gradle" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.6.kts" file-name="../${FEATURE_NAME}/data/build.gradle" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.7.kt" file-name="../${FEATURE_NAME}/presentation/src/test/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/presentation/${PRESENTATION_INITIAL_CLASS}Test" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.8.kt" file-name="../${FEATURE_NAME}/domain/src/main/java/com/tapac1k/${FEATURE_NAME_UNDERSCORE}/domain/${DOMAIN_INITIAL_CLASS}" reformat="true" live-template-enabled="false" />
+      <template name="FeatureModule.kts.child.9.kts" file-name="../${FEATURE_NAME}/contract-ui/build.gradle" reformat="true" live-template-enabled="false" />
     </default_templates>
   </component>
 </project>

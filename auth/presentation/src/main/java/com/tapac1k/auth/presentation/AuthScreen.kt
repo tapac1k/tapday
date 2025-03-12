@@ -86,7 +86,8 @@ fun GoogleButton(
             )
             Text("Google")
         } else {
-            CircularProgressIndicator()
+            CircularProgressIndicator(
+                modifier = Modifier.padding(4.dp),)
             Text("Loading...")
         }
     }

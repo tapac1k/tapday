@@ -6,7 +6,6 @@ interface DayListRouter {
 
     @Composable
     fun NavigateDayList(
-        onSettings: ()-> Unit,
-        openDay: () -> Unit
+        dayListNavigation: DayListNavigation
     )
 }

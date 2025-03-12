@@ -40,6 +40,13 @@ include(":day-list:data")
 include(":day-list:contract")
 include(":day-list:di")
 
+include(":day:contract-ui")
+include(":day:presentation")
+include(":day:domain")
+include(":day:data")
+include(":day:contract")
+include(":day:di")
+
 include(":settings:contract-ui")
 include(":settings:presentation")
 include(":settings:domain")

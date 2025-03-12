@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.tapac1k.${FEATURE_NAME_UNDERSCORE}.contract_ui"
+    namespace = "com.tapac1k.day.di"
     compileSdk = rootProject.ext["compileSdk"] as Int
 
     defaultConfig {
@@ -17,16 +17,29 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
-configureComposeDependencies(Target.CONTRACT)
+configureComposeDependencies()
 hilt()
 
 dependencies {
+    api(project(":day:contract-ui"))
+    api(project(":day:contract"))
+    api(project(":day:domain"))
+    api(project(":day:data"))
+    api(project(":day:presentation"))
+
+    implementation(project(":utils:compose"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-
+    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    debugImplementation(libs.ui.tooling)
 }

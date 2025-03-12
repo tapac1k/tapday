@@ -1,5 +1,5 @@
-package com.tapac1k.${FEATURE_NAME_UNDERSCORE}.presentation
+package com.tapac1k.${FEATURE_NAME_UNDERSCORE}.contract
 
-class ${PRESENTATION_INITIAL_CLASS} {
+class ${CONTRACT_INITIAL_CLASS} {
 
 }

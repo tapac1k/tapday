@@ -1,5 +1,5 @@
-package com.tapac1k.${FEATURE_NAME_UNDERSCORE}.contract
+package com.tapac1k.${FEATURE_NAME_UNDERSCORE}.contract_ui
 
-class ${CONTRACT_INITIAL_CLASS} {
+class ${CONTRACT_UI_INITIAL_CLASS} {
 
 }

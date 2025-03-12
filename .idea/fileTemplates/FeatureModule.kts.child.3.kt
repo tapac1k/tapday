@@ -1,5 +1,5 @@
-package com.tapac1k.${FEATURE_NAME_UNDERSCORE}.data
+package com.tapac1k.${FEATURE_NAME_UNDERSCORE}.presentation
 
-class ${DATA_INITIAL_CLASS} {
+class ${PRESENTATION_INITIAL_CLASS} {
 
 }

@@ -8,13 +8,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavOptions
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.tapac1k.compose.theme.TapMyDayTheme
+import com.tapac1k.day.contract.Day
+import com.tapac1k.day.contract_ui.DayNavigation
+import com.tapac1k.day.contract_ui.DayRouter
+import com.tapac1k.day_list.contract_ui.DayListNavigation
 import com.tapac1k.day_list.contract_ui.DayListRouter
+import com.tapac1k.settings.contract_ui.SettingsNavigation
 import com.tapac1k.settings.contract_ui.SettingsRouter
+import com.tapac1k.utils.common.WithBackNavigation
 import dagger.Lazy
 
 @Composable
@@ -22,6 +28,7 @@ fun MainScreen(
     viewModel: MainViewModel = viewModel(),
     dayListRouter: Lazy<DayListRouter>? = null,
     settingsRouter: Lazy<SettingsRouter>? = null,
+    dayRouter: Lazy<DayRouter>? = null,
     onLoggedOut: () -> Unit,
 ) {
     Surface(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
@@ -35,6 +42,7 @@ fun MainScreen(
         MainScreenContent(
             dayListRouter,
             settingsRouter,
+            dayRouter
         )
     }
 }
@@ -43,22 +51,35 @@ fun MainScreen(
 fun MainScreenContent(
     dayListRouter: Lazy<DayListRouter>? = null,
     settingsRouter: Lazy<SettingsRouter>? = null,
+    dayRouter: Lazy<DayRouter>? = null,
 ) {
     val navController = rememberNavController()
-    val startRoute = "day-list"
-    NavHost(navController, startDestination = startRoute) {
-        composable("day-list") { backStackEntry ->
-            dayListRouter?.get()?.NavigateDayList(
-                onSettings = {
-                    navController.navigate("settings")
-                },
-                openDay = {
+    val defaultBackController = DefaultBackNavigation(navController)
+    NavHost(navController, startDestination = DayList) {
+        composable<DayList> { backStackEntry ->
+            dayListRouter?.get()?.NavigateDayList(object : DayListNavigation {
+                override fun openDayDetails(dayId: Long) {
+                    navController.navigate(Day(dayId))
+                }
 
-                })
+                override fun openSettings() {
+                    navController.navigate(Settings)
+                }
+            })
         }
-        composable("settings") { navBackStackEntry ->
-            settingsRouter?.get()?.NavigateToSettings()
+        composable<Day> {
+            dayRouter?.get()?.NavigateDayScreen(object : DayNavigation, WithBackNavigation by defaultBackController {})
         }
+        composable<Settings> { navBackStackEntry ->
+            settingsRouter?.get()?.NavigateToSettings(object : SettingsNavigation, WithBackNavigation by defaultBackController {})
+        }
+
+    }
+}
+
+private class DefaultBackNavigation(private val navController: NavController) : WithBackNavigation {
+    override fun onBack() {
+        navController.navigateUp()
     }
 }
 
