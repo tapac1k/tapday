@@ -1,5 +1,5 @@
 package com.tapac1k.day.contract
 
-interface GetCurrentDayUseCase {
+interface GetCurrentDayIdUseCase {
     fun invoke(): Long
 }

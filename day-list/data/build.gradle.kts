@@ -27,6 +27,7 @@ dependencies {
     implementation(project(":utils:common"))
     implementation(project(":day-list:contract"))
     implementation(project(":day-list:domain"))
+    implementation(project(":utils:firebase-helper"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

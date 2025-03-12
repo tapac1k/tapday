@@ -1,6 +1,7 @@
 [versions]
 agp = "8.9.0"
 firebaseBom = "33.10.0"
+firebaseFirestore = "25.1.2"
 hiltAndroid = "2.51.1"
 credentials = "1.5.0-rc01"
 hiltNavigationFragment = "1.2.0"
@@ -18,6 +19,7 @@ activityCompose = "1.10.1"
 composeBom = "2025.02.00"
 navigationCompose = "2.8.8"
 googleid = "1.1.1"
+playServicesAuth = "latest_version"
 uiTextGoogleFonts = "1.7.8"
 uiTooling = "1.7.8"
 
@@ -31,6 +33,9 @@ androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-f
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx" }
+google-firebase-firestore = { module = "com.google.firebase:firebase-firestore", version.ref = "firebaseFirestore" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 firebase-common = { module = "com.google.firebase:firebase-common" }
@@ -55,6 +60,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 
 [plugins]

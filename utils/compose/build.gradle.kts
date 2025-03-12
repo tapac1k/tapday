@@ -27,7 +27,7 @@ android {
 configureComposeDependencies(Target.UTILS)
 
 dependencies {
-    implementation(libs.androidx.ui.text.google.fonts)
+    api(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

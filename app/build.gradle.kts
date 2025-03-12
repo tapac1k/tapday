@@ -51,6 +51,8 @@ dependencies {
     implementation(project(":utils:compose"))
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.common)
+    implementation( libs.play.services.auth)
+    implementation(libs.google.firebase.firestore)
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
