@@ -30,6 +30,10 @@ configureComposeDependencies()
 hilt()
 
 dependencies {
+    implementation(libs.androidx.paging.runtime.ktx)
+    
+    implementation(libs.androidx.paging.compose)
+
     implementation(project(":day-list:contract-ui"))
     implementation(project(":day-list:contract"))
     implementation(project(":day-list:domain"))
@@ -42,6 +46,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)
+    // alternatively - without Android dependencies for tests
+    testImplementation(libs.androidx.paging.common)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     debugImplementation(libs.ui.tooling)

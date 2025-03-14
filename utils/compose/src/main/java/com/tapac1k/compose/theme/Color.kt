@@ -216,3 +216,7 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF251F17)
 val surfaceContainerDarkHighContrast = Color(0xFF362F27)
 val surfaceContainerHighDarkHighContrast = Color(0xFF423A32)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF4D453D)
+
+val sleepColor = Color(0xFFECCE0C)
+val stateColor = Color(0xFF0C9E01)
+val moodColor = Color(0xFF0C9EC1)

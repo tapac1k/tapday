@@ -1,4 +1,4 @@
-package com.tapac1k.day_list.presentation
+package com.tapac1k.day_list.presentation.screen
 
 sealed class DayListEvent {
     data object OpenSettings : DayListEvent()

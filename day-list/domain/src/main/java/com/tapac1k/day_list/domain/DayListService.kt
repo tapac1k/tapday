@@ -1,5 +1,7 @@
 package com.tapac1k.day_list.domain
 
-class DayListService {
+import com.tapac1k.day.contract.DayInfo
 
+interface DayListService {
+    suspend fun requestDayList(from: Long, to: Long): Result<List<DayInfo>>
 }

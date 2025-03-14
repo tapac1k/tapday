@@ -1,8 +1,8 @@
 package com.tapac1k.day.data
 
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.firestore
 import com.tapac1k.day.contract.DayActivity
 import com.tapac1k.day.contract.DayInfo
@@ -22,11 +22,23 @@ class DayServiceImpl @Inject constructor(
         return System.currentTimeMillis() / 1000 / 60 / 60 / 24
     }
 
-    override suspend fun saveDayActivity(day: Long, dayActivity: DayActivity): Result<Unit> = resultOf {
+    override suspend fun saveDayActivity(
+        day: Long,
+        dayActivity: DayActivity,
+    ): Result<Unit> = resultOf {
         return@resultOf suspendCancellableCoroutine<Unit> { cont ->
             val db = Firebase.firestore
             val user = Firebase.auth.currentUser!!
-            db.collection("users").document(user.uid).collection("days").document(day.toString()).set(dayActivity)
+            val fiealds = mapOf(
+                "updated" to Timestamp.now(),
+                "id" to day,
+                "mood" to dayActivity.mood,
+                "state" to dayActivity.state,
+                "sleepHours" to dayActivity.sleepHours,
+            )
+            val dayFirestore = db.collection("users").document(user.uid).collection("days").document(day.toString())
+            dayFirestore
+                .set(fiealds)
                 .addOnSuccessListener {
                     cont.resume(Unit)
                 }

@@ -1,5 +1,6 @@
 package com.tapac1k.day.di
 
+import com.tapac1k.day.contract.DayUtil
 import com.tapac1k.day.contract.GetCurrentDayIdUseCase
 import com.tapac1k.day.data.DayServiceImpl
 import com.tapac1k.day.data.usecase.GetCurrentDayIdIdUseCaseImpl

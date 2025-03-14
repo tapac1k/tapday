@@ -27,7 +27,14 @@ dependencies {
     implementation(project(":utils:common"))
     implementation(project(":day-list:contract"))
     implementation(project(":day-list:domain"))
+    implementation(project(":day:contract"))
     implementation(project(":utils:firebase-helper"))
+
+    implementation( libs.play.services.auth)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.firestore)
+    implementation(platform(libs.firebase.bom))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

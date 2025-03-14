@@ -24,6 +24,7 @@ class DayViewModel @Inject constructor(
     private val saveDayUseCase: SaveDayUseCase,
     private val getDayUseCase: GetDayUseCase,
 ) : ViewModel() {
+    private var updated = false
     private val day = stateHandle.toRoute<Day>()
     private val _state = MutableStateFlow(DayState())
     private val _updates = MutableSharedFlow<StateUpdate>()
@@ -43,6 +44,7 @@ class DayViewModel @Inject constructor(
     }
 
     fun updateState(update: StateUpdate) = viewModelScope.launch {
+        updated = true
         _updates.emit(update)
     }
 
@@ -68,8 +70,10 @@ class DayViewModel @Inject constructor(
     }
 
     fun saveDay() {
-        GlobalScope.launch {
-            saveDayUseCase.invoke(day.day, _state.value.dayActivity)
+        if (updated) {
+            GlobalScope.launch {
+                saveDayUseCase.invoke(day.day, _state.value.dayActivity)
+            }
         }
     }
 
