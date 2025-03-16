@@ -5,4 +5,9 @@ import androidx.compose.runtime.Composable
 interface DayRouter {
     @Composable
     fun NavigateDayScreen(dayNavigation: DayNavigation)
+
+    @Composable
+    fun NavigateDayList(
+        dayListNavigation: DayListNavigation
+    )
 }

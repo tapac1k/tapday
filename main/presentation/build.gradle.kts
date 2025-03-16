@@ -27,11 +27,13 @@ dependencies {
     implementation(project(":main:contract-ui"))
     implementation(project(":auth:contract"))
 
-    implementation(project(":day-list:contract-ui"))
+    implementation(project(":training:contract-ui"))
+    implementation(project(":training:contract"))
     implementation(project(":day:contract-ui"))
     implementation(project(":day:contract"))
     implementation(project(":settings:contract-ui"))
 
+    implementation(libs.androidx.material)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

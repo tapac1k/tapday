@@ -1,8 +1,6 @@
 package com.tapac1k.day.contract
 
-import kotlinx.serialization.Serializable
 
-@Serializable
 data class DayActivity(
     val sleepHours: Float = 0f,
     val mood: Int = 0,

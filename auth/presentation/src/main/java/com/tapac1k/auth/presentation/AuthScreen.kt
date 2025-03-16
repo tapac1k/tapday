@@ -40,7 +40,7 @@ fun AuthScreen(
         LaunchedEffect(Unit) {
             viewModel.events.collect { event ->
                 if (event is AuthEvent.LoggedIn) {
-                    onLoggedIn() // ✅ Call onLoggedIn() when the event occurs
+                    onLoggedIn()
                 }
             }
         }

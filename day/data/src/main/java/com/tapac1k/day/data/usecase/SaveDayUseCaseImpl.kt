@@ -1,8 +1,8 @@
 package com.tapac1k.day.data.usecase
 
 import com.tapac1k.day.contract.DayActivity
-import com.tapac1k.day.domain.DayService
-import com.tapac1k.day.domain.SaveDayUseCase
+import com.tapac1k.day.domain.service.DayService
+import com.tapac1k.day.domain.usecase.SaveDayUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

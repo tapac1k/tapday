@@ -6,18 +6,17 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.tapac1k.day.contract.DayActivity
 import com.tapac1k.day.contract.DayInfo
-import com.tapac1k.day.domain.DayService
-import com.tapac1k.firebase_helper.readDayInfo
+import com.tapac1k.day.domain.service.DayService
 import com.tapac1k.utils.common.resultOf
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.tasks.await
+import readDayInfo
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 class DayServiceImpl @Inject constructor(
 
 ) : DayService {
-    val userId = Firebase.auth.currentUser?.uid
+    private val db = Firebase.firestore
+    private val currentUserId = Firebase.auth.currentUser?.uid
     override fun getCurrentDay(): Long {
         return System.currentTimeMillis() / 1000 / 60 / 60 / 24
     }
@@ -26,40 +25,52 @@ class DayServiceImpl @Inject constructor(
         day: Long,
         dayActivity: DayActivity,
     ): Result<Unit> = resultOf {
-        return@resultOf suspendCancellableCoroutine<Unit> { cont ->
-            val db = Firebase.firestore
-            val user = Firebase.auth.currentUser!!
-            val fiealds = mapOf(
-                "updated" to Timestamp.now(),
-                "id" to day,
-                "mood" to dayActivity.mood,
-                "state" to dayActivity.state,
-                "sleepHours" to dayActivity.sleepHours,
-            )
-            val dayFirestore = db.collection("users").document(user.uid).collection("days").document(day.toString())
-            dayFirestore
-                .set(fiealds)
-                .addOnSuccessListener {
-                    cont.resume(Unit)
-                }
-                .addOnFailureListener {
-                    cont.resumeWithException(it)
-                }
-        }
+        val user = Firebase.auth.currentUser!!
+        val fiealds = mapOf(
+            "updated" to Timestamp.now(),
+            "id" to day,
+            "mood" to dayActivity.mood,
+            "state" to dayActivity.state,
+            "sleepHours" to dayActivity.sleepHours,
+        )
+        val dayFirestore = db.collection("users").document(user.uid).collection(DAYS_PATH).document(day.toString())
+        dayFirestore
+            .set(fiealds)
+            .await()
+
     }
 
     override suspend fun getDayInfo(day: Long): Result<DayInfo> = resultOf {
-        return@resultOf suspendCancellableCoroutine<DayInfo> { cont ->
-            val db = Firebase.firestore
-            db.collection("users").document(userId!!).collection("days").document(day.toString()).get()
-                .addOnSuccessListener {
-                    cont.resume(it.readDayInfo())
-                }
-                .addOnFailureListener {
-                    cont.resumeWithException(it)
-                }
-        }
+        return@resultOf db.collection("users")
+            .document(currentUserId!!)
+            .collection(DAYS_PATH)
+            .document(day.toString())
+            .get()
+            .await()
+            .readDayInfo()
     }
 
 
+    override suspend fun requestDayList(from: Long, to: Long): Result<List<DayInfo>> = resultOf {
+        db.collection("users")
+            .document(currentUserId!!)
+            .collection("days")
+            .whereLessThanOrEqualTo("id", from)
+            .whereGreaterThanOrEqualTo("id", to)
+            .get()
+            .await()
+            .let {
+                buildDayList(from, to, it.associate { it.id.toLong() to it.readDayInfo() })
+            }
+    }
+
+    private fun buildDayList(from: Long, to: Long, map: Map<Long, DayInfo>): List<DayInfo> {
+        return (to..from).reversed().map {
+            map[it] ?: DayInfo(it, DayActivity(), null)
+        }
+    }
+
+    private companion object {
+        private const val DAYS_PATH = "days"
+    }
 }

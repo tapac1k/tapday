@@ -1,4 +1,7 @@
 package com.tapac1k.settings.presentation
 
-class SettingsState {
-}
+import com.tapac1k.main.contract_ui.SettingProvider
+
+data class SettingsState(
+    val settingProviders: Collection<SettingProvider> = emptySet(),
+)

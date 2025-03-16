@@ -1,34 +1,62 @@
 package com.tapac1k.presentation
 
+import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.automirrored.outlined.MenuBook
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.tapac1k.compose.theme.TapMyDayTheme
-import com.tapac1k.day.contract.Day
+import com.tapac1k.day.contract_ui.DayList
+import com.tapac1k.day.contract_ui.DayRoute
+import com.tapac1k.day.contract_ui.DayListNavigation
 import com.tapac1k.day.contract_ui.DayNavigation
 import com.tapac1k.day.contract_ui.DayRouter
-import com.tapac1k.day_list.contract_ui.DayListNavigation
-import com.tapac1k.day_list.contract_ui.DayListRouter
 import com.tapac1k.settings.contract_ui.SettingsNavigation
 import com.tapac1k.settings.contract_ui.SettingsRouter
+import com.tapac1k.training.contract.TrainingTag
+import com.tapac1k.training.contract_ui.TrainingRouter
+import com.tapac1k.training.contract_ui.TrainingTagNavigation
+import com.tapac1k.training.contract_ui.TrainingTagRoute
+import com.tapac1k.training.contract_ui.TrainingTagsRoute
 import com.tapac1k.utils.common.WithBackNavigation
 import dagger.Lazy
 
 @Composable
 fun MainScreen(
     viewModel: MainViewModel = viewModel(),
-    dayListRouter: Lazy<DayListRouter>? = null,
     settingsRouter: Lazy<SettingsRouter>? = null,
     dayRouter: Lazy<DayRouter>? = null,
+    trainingRouter: Lazy<TrainingRouter>? = null,
     onLoggedOut: () -> Unit,
 ) {
     Surface(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
@@ -40,41 +68,102 @@ fun MainScreen(
             }
         }
         MainScreenContent(
-            dayListRouter,
             settingsRouter,
-            dayRouter
+            dayRouter,
+            trainingRouter,
         )
     }
 }
 
 @Composable
 fun MainScreenContent(
-    dayListRouter: Lazy<DayListRouter>? = null,
     settingsRouter: Lazy<SettingsRouter>? = null,
     dayRouter: Lazy<DayRouter>? = null,
+    trainingRouter: Lazy<TrainingRouter>? = null,
 ) {
     val navController = rememberNavController()
     val defaultBackController = DefaultBackNavigation(navController)
-    NavHost(navController, startDestination = DayList) {
-        composable<DayList> { backStackEntry ->
-            dayListRouter?.get()?.NavigateDayList(object : DayListNavigation {
-                override fun openDayDetails(dayId: Long) {
-                    navController.navigate(Day(dayId))
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    Scaffold(
+        bottomBar = {
+            val currentDestination = navBackStackEntry?.destination
+            val visible = !topLevelDestinations.all { currentDestination?.hasRoute(it.route::class) == false }
+            AnimatedVisibility(
+                visible = visible,
+                exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
+                enter = slideInVertically(initialOffsetY = { it }) + fadeIn()
+            ) {
+                BottomNavigation(
+                    backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
+                ) {
+                    topLevelDestinations.forEach { topLevelRoute ->
+                        val selected = currentDestination?.hasRoute(topLevelRoute.route::class) == true
+                        BottomNavigationItem(
+                            modifier = Modifier.alpha(if (selected) 1f else 0.5f),
+                            icon = {
+                                Icon(
+                                    if (selected) topLevelRoute.selectedIcon else topLevelRoute.unselectedIcon,
+                                    contentDescription = topLevelRoute.name
+                                )
+                            },
+                            label = { Text(topLevelRoute.name, style = MaterialTheme.typography.labelSmall) },
+                            onClick = {
+                                navController.navigate(topLevelRoute.route) {
+                                    popUpTo(0) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                            selected = selected,
+                        )
+                    }
                 }
+            }
 
-                override fun openSettings() {
-                    navController.navigate(Settings)
-                }
-            })
         }
-        composable<Day> {
-            dayRouter?.get()?.NavigateDayScreen(object : DayNavigation, WithBackNavigation by defaultBackController {})
-        }
-        composable<Settings> { navBackStackEntry ->
-            settingsRouter?.get()?.NavigateToSettings(object : SettingsNavigation, WithBackNavigation by defaultBackController {})
-        }
+    ) { paddingValues ->
+        NavHost(
+            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
+            navController = navController,
+            startDestination = DayList
+        ) {
+            composable<DayList> { backStackEntry ->
+                dayRouter?.get()?.NavigateDayList(object : DayListNavigation {
+                    override fun openDayDetails(dayId: Long) {
+                        navController.navigate(DayRoute(dayId))
+                    }
+                })
+            }
+            composable<DayRoute> {
+                dayRouter?.get()?.NavigateDayScreen(object : DayNavigation, WithBackNavigation by defaultBackController {})
+            }
+            composable<Settings> { navBackStackEntry ->
+                settingsRouter?.get()?.NavigateToSettings(object : SettingsNavigation {
+                    override fun navigateTo(route: Any) {
+                        navController.navigate(route)
+                    }
+                })
+            }
+            composable<TrainingTagsRoute>{
+                trainingRouter?.get()?.NavigateTrainingTags(object : TrainingTagNavigation, WithBackNavigation by defaultBackController {
+                    override fun createTag() {
+                        navController.navigate(TrainingTagRoute())
+                    }
 
+                    override fun ediTag(tag: TrainingTag) {
+                        navController.navigate(TrainingTagRoute(tag.id, tag.value))
+                    }
+                })
+            }
+            dialog<TrainingTagRoute> {
+                trainingRouter?.get()?.NavigateTrainingTag(defaultBackController)
+            }
+
+        }
     }
+
 }
 
 private class DefaultBackNavigation(private val navController: NavController) : WithBackNavigation {
@@ -83,10 +172,44 @@ private class DefaultBackNavigation(private val navController: NavController) : 
     }
 }
 
-@Preview
+private val topLevelDestinations = listOf(
+    Destination
+        (
+        DayList,
+        "Day List",
+        Icons.AutoMirrored.Filled.MenuBook,
+        Icons.AutoMirrored.Outlined.MenuBook
+    ),
+    Destination(
+        Settings,
+        "Settings",
+        Icons.Filled.Settings,
+        Icons.Outlined.Settings,
+    ),
+)
+
+private data class Destination<T : Any>(
+    val route: T,
+    val name: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+)
+
 @Composable
 fun MainScreenPreview() {
     TapMyDayTheme {
         MainScreenContent()
     }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun MainScreenPreviewLight() {
+    MainScreenPreview()
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun MainScreenPreviewDark() {
+    MainScreenPreview()
 }

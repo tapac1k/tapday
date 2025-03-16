@@ -45,7 +45,7 @@ hilt()
 dependencies {
     implementation(project(":auth:di"))
     implementation(project(":main:di"))
-    implementation(project(":day-list:di"))
+    implementation(project(":training:di"))
     implementation(project(":day:di"))
     implementation(project(":settings:di"))
     implementation(project(":utils:compose"))

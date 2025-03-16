@@ -31,6 +31,8 @@ dependencies {
     implementation(project(":settings:contract"))
     implementation(project(":settings:domain"))
 
+    implementation(project(":main:contract-ui"))
+
     implementation(project(":auth:contract"))
 
     implementation(libs.androidx.core.ktx)

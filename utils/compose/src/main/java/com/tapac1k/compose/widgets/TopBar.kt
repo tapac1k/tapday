@@ -42,7 +42,7 @@ inline fun TopBar(
     content: @Composable RowScope.() -> Unit = {}
 ) {
     Row(
-        Modifier
+        modifier
             .fillMaxWidth()
             .wrapContentSize()
             .shadow(4.dp, shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
@@ -53,12 +53,6 @@ inline fun TopBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         content()
-        Spacer(Modifier.height(50.dp).weight(1f))
-        for (icon in icons) {
-            IconButton(onClick = icon.second) {
-                Icon(icon.first, "")
-            }
-        }
     }
 }
 

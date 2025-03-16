@@ -36,7 +36,7 @@ dependencies {
     api(project(":main:presentation"))
     implementation(project(":auth:contract"))
 
-    implementation(project(":day-list:contract-ui"))
+    implementation(project(":training:contract-ui"))
     implementation(project(":settings:contract-ui"))
 
     implementation(libs.androidx.core.ktx)

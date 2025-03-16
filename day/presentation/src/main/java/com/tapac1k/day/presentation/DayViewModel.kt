@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.tapac1k.day.contract.Day
-import com.tapac1k.day.domain.GetDayUseCase
-import com.tapac1k.day.domain.SaveDayUseCase
+import com.tapac1k.day.contract_ui.DayRoute
+import com.tapac1k.day.domain.usecase.GetDayUseCase
+import com.tapac1k.day.domain.usecase.SaveDayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -25,7 +25,7 @@ class DayViewModel @Inject constructor(
     private val getDayUseCase: GetDayUseCase,
 ) : ViewModel() {
     private var updated = false
-    private val day = stateHandle.toRoute<Day>()
+    private val day = stateHandle.toRoute<DayRoute>()
     private val _state = MutableStateFlow(DayState())
     private val _updates = MutableSharedFlow<StateUpdate>()
     val state = _state.asStateFlow()
@@ -69,7 +69,7 @@ class DayViewModel @Inject constructor(
         }
     }
 
-    fun saveDay() {
+    private fun saveDay() {
         if (updated) {
             GlobalScope.launch {
                 saveDayUseCase.invoke(day.day, _state.value.dayActivity)
