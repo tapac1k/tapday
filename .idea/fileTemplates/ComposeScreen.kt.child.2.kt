@@ -1,5 +1,6 @@
 #if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME}
 #end
 
-sealed interface ${SCREEN_NAME}Updater {
-}
+data class ${SCREEN_NAME}State(
+    val loading: Boolean = true,
+)
