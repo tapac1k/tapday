@@ -1,10 +1,18 @@
 #if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME}
 #end
 #set($SCREEN_NAME_ = $SCREEN_NAME)
+
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tapac1k.compose.theme.TapMyDayTheme
 
@@ -19,9 +27,9 @@ fun ${SCREEN_NAME}Screen(
 @Composable
 fun ${SCREEN_NAME}ScreenContent(
 ) {
-     Column {
-       
-        }
+   Scaffold() { paddingValues ->
+        LazyColumn(contentPadding = paddingValues) { }
+    }
 }
 
 @Composable
