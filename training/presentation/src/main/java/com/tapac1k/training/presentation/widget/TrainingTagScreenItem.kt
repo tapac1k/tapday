@@ -56,8 +56,8 @@ fun TrainingTagItem(
             }
 
             Row {
-                Text("75 execisises", Modifier.padding(4.dp), style = MaterialTheme.typography.labelSmall.copy(textDecoration = TextDecoration.Underline))
-                Text("34 trainings", Modifier.padding(4.dp), style = MaterialTheme.typography.labelSmall.copy(textDecoration = TextDecoration.Underline))
+                Text("exercises", Modifier.padding(4.dp), style = MaterialTheme.typography.labelSmall.copy(textDecoration = TextDecoration.Underline))
+                Text("trainings", Modifier.padding(4.dp), style = MaterialTheme.typography.labelSmall.copy(textDecoration = TextDecoration.Underline))
             }
         }
         Icon(Icons.Filled.Edit, contentDescription = "edit", modifier = Modifier.padding(4.dp))
@@ -68,7 +68,6 @@ fun TrainingTagItem(
 @Composable
 private fun TrainingTagItemPreview() {
     TapMyDayTheme {
-
         Surface {
 
             Column(Modifier.fillMaxSize()) {

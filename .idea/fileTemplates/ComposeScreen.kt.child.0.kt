@@ -1,5 +1,5 @@
 #if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME}
-
+#end
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,5 +16,4 @@ class ${SCREEN_NAME}ViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(${SCREEN_NAME}State())
     val state = _state.asStateFlow()
-
 }

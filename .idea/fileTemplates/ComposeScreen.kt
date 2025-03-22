@@ -1,5 +1,6 @@
 #if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME}
-
+#end
+#set($SCREEN_NAME_ = $SCREEN_NAME)
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
@@ -9,7 +10,7 @@ import com.tapac1k.compose.theme.TapMyDayTheme
 
 @Composable
 fun ${SCREEN_NAME}Screen(
-    viewModel: {SCREEN_NAME}ViewModel = viewModel(),
+    viewModel: ${SCREEN_NAME}ViewModel = viewModel(),
 
     ) {
     ${SCREEN_NAME}ScreenContent()

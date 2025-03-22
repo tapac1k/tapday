@@ -14,7 +14,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.SportsGymnastics
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.SportsGymnastics
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -35,8 +37,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
+import com.tapac1k.compose.safeNavigate
 import com.tapac1k.compose.theme.TapMyDayTheme
-import com.tapac1k.day.contract_ui.DayList
+import com.tapac1k.day.contract_ui.DayListRoute
 import com.tapac1k.day.contract_ui.DayRoute
 import com.tapac1k.day.contract_ui.DayListNavigation
 import com.tapac1k.day.contract_ui.DayNavigation
@@ -44,12 +47,17 @@ import com.tapac1k.day.contract_ui.DayRouter
 import com.tapac1k.settings.contract_ui.SettingsNavigation
 import com.tapac1k.settings.contract_ui.SettingsRouter
 import com.tapac1k.training.contract.TrainingTag
+import com.tapac1k.training.contract_ui.ExerciseDetailsRoute
+import com.tapac1k.training.contract_ui.ExerciseListNavigation
+import com.tapac1k.training.contract_ui.ExerciseListRoute
+import com.tapac1k.training.contract_ui.TrainingListRoute
 import com.tapac1k.training.contract_ui.TrainingRouter
 import com.tapac1k.training.contract_ui.TrainingTagNavigation
 import com.tapac1k.training.contract_ui.TrainingTagRoute
 import com.tapac1k.training.contract_ui.TrainingTagsRoute
 import com.tapac1k.utils.common.WithBackNavigation
 import dagger.Lazy
+import kotlin.reflect.KClass
 
 @Composable
 fun MainScreen(
@@ -127,12 +135,12 @@ fun MainScreenContent(
         NavHost(
             modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
             navController = navController,
-            startDestination = DayList
+            startDestination = DayListRoute
         ) {
-            composable<DayList> { backStackEntry ->
+            composable<DayListRoute> { backStackEntry ->
                 dayRouter?.get()?.NavigateDayList(object : DayListNavigation {
                     override fun openDayDetails(dayId: Long) {
-                        navController.navigate(DayRoute(dayId))
+                        navController.safeNavigate(DayListRoute::class, DayRoute(dayId))
                     }
                 })
             }
@@ -142,28 +150,15 @@ fun MainScreenContent(
             composable<Settings> { navBackStackEntry ->
                 settingsRouter?.get()?.NavigateToSettings(object : SettingsNavigation {
                     override fun navigateTo(route: Any) {
-                        navController.navigate(route)
+                        navController.safeNavigate(Settings::class, route)
                     }
                 })
             }
-            composable<TrainingTagsRoute>{
-                trainingRouter?.get()?.NavigateTrainingTags(object : TrainingTagNavigation, WithBackNavigation by defaultBackController {
-                    override fun createTag() {
-                        navController.navigate(TrainingTagRoute())
-                    }
-
-                    override fun ediTag(tag: TrainingTag) {
-                        navController.navigate(TrainingTagRoute(tag.id, tag.value))
-                    }
-                })
+            trainingRouter?.get()?.apply {
+                initGraph(navController, defaultBackController)
             }
-            dialog<TrainingTagRoute> {
-                trainingRouter?.get()?.NavigateTrainingTag(defaultBackController)
-            }
-
         }
     }
-
 }
 
 private class DefaultBackNavigation(private val navController: NavController) : WithBackNavigation {
@@ -175,10 +170,16 @@ private class DefaultBackNavigation(private val navController: NavController) : 
 private val topLevelDestinations = listOf(
     Destination
         (
-        DayList,
+        DayListRoute,
         "Day List",
         Icons.AutoMirrored.Filled.MenuBook,
         Icons.AutoMirrored.Outlined.MenuBook
+    ),
+    Destination(
+        TrainingListRoute,
+        "Trainings",
+        Icons.Filled.SportsGymnastics,
+        Icons.Outlined.SportsGymnastics,
     ),
     Destination(
         Settings,

@@ -5,4 +5,4 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DayRoute(val day: Long)
 @Serializable
-data object DayList
+data object DayListRoute
