@@ -1,24 +1,31 @@
 package com.tapac1k.day.presentation
 
-import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import com.tapac1k.compose.safeNavigate
+import com.tapac1k.day.contract_ui.DayListNavigation
+import com.tapac1k.day.contract_ui.DayListRoute
 import com.tapac1k.day.contract_ui.DayNavigation
+import com.tapac1k.day.contract_ui.DayRoute
 import com.tapac1k.day.contract_ui.DayRouter
 import com.tapac1k.day.presentation.daylist.DayListScreen
-import com.tapac1k.day.presentation.daylist.DayListViewModel
+import com.tapac1k.utils.common.WithBackNavigation
 import javax.inject.Inject
 
 class DayRouterImpl @Inject constructor() : DayRouter {
 
-    @Composable
-    override fun NavigateDayScreen(dayNavigation: DayNavigation) {
-        val viewModel = hiltViewModel<DayViewModel>()
-        DayScreen(viewModel, dayNavigation)
-    }
-
-    @Composable
-    override fun NavigateDayList(dayListNavigation: com.tapac1k.day.contract_ui.DayListNavigation) {
-        val viewModel = hiltViewModel<DayListViewModel>()
-        DayListScreen(viewModel, dayListNavigation)
+    override fun NavGraphBuilder.initGraph(navController: NavController, defaultBackController: WithBackNavigation) {
+        composable<DayListRoute> { backStackEntry ->
+            DayListScreen(hiltViewModel(), object : DayListNavigation {
+                override fun openDayDetails(dayId: Long) {
+                    navController.safeNavigate(DayListRoute::class, DayRoute(dayId))
+                }
+            })
+        }
+        composable<DayRoute> {
+            DayScreen(hiltViewModel(), object : DayNavigation, WithBackNavigation by defaultBackController {})
+        }
     }
 }

@@ -7,6 +7,7 @@ import com.tapac1k.training.data.usecase.GetExerciseDetailsUseCaseImpl
 import com.tapac1k.training.data.usecase.GetExerciseListUseCaseImpl
 import com.tapac1k.training.data.usecase.GetTrainingTagsUseCaseImpl
 import com.tapac1k.training.data.usecase.SaveExerciseUseCaseImpl
+import com.tapac1k.training.data.usecase.SaveTrainingUseCaseImpl
 import com.tapac1k.training.domain.TrainingService
 import com.tapac1k.training.domain.usecase.CreateTrainingTagUseCase
 import com.tapac1k.training.domain.usecase.EditTrainingTagUseCase
@@ -14,6 +15,7 @@ import com.tapac1k.training.domain.usecase.GetExerciseDetailsUseCase
 import com.tapac1k.training.domain.usecase.GetExerciseListUseCase
 import com.tapac1k.training.domain.usecase.GetTrainingTagsUseCase
 import com.tapac1k.training.domain.usecase.SaveExerciseUseCase
+import com.tapac1k.training.domain.usecase.SaveTrainingUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -47,5 +49,8 @@ interface TrainingViewModelModule {
 
     @Binds
     fun provideSaveExerciseUseCase(impl: SaveExerciseUseCaseImpl): SaveExerciseUseCase
+
+    @Binds
+    fun bindSaveTrainingUseCase(impl: SaveTrainingUseCaseImpl): SaveTrainingUseCase
 
 }

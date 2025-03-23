@@ -1,13 +1,9 @@
 package com.tapac1k.day.contract_ui
 
-import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import com.tapac1k.utils.common.WithBackNavigation
 
 interface DayRouter {
-    @Composable
-    fun NavigateDayScreen(dayNavigation: DayNavigation)
-
-    @Composable
-    fun NavigateDayList(
-        dayListNavigation: DayListNavigation
-    )
+    fun NavGraphBuilder.initGraph(navController: NavController, defaultBackController: WithBackNavigation)
 }

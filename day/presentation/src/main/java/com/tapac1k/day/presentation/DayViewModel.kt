@@ -69,7 +69,7 @@ class DayViewModel @Inject constructor(
         }
     }
 
-    private fun saveDay() {
+    fun saveDay() {
         if (updated) {
             GlobalScope.launch {
                 saveDayUseCase.invoke(day.day, _state.value.dayActivity)

@@ -1,6 +1,7 @@
 package com.tapac1k.training.domain
 
 import com.tapac1k.training.contract.Exercise
+import com.tapac1k.training.contract.ExerciseGroup
 import com.tapac1k.training.contract.TrainingTag
 import kotlinx.coroutines.flow.Flow
 
@@ -17,4 +18,6 @@ interface TrainingService {
     class TagAlreadyExistException(tagName: String) : Exception("Tag $tagName already exist")
     class ExerciseAlreadyExistException(exerciseName: String) : Exception("Tag $exerciseName already exist")
     class FieldShouldNotBeEmpty(fieldName: String) : Exception("Field $fieldName should not be empty")
+
+    suspend fun saveTraining(id: String?, exerciseGroups: List<ExerciseGroup>): Result<String>
 }

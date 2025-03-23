@@ -25,11 +25,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tapac1k.compose.theme.TapMyDayTheme
@@ -37,6 +42,9 @@ import com.tapac1k.compose.widgets.TopBar
 import com.tapac1k.day.contract.DayActivity
 import com.tapac1k.day.contract_ui.DayNavigation
 import com.tapac1k.day.presentation.widget.ActivityRings
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.tapac1k.compose.LifecycleEffect
 
 @Composable
 fun DayScreen(
@@ -44,6 +52,13 @@ fun DayScreen(
     dayNavigation: DayNavigation
 ) {
     val state by  viewModel.state.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LifecycleEffect(
+        lifecycleOwner,
+        onStop = {
+            viewModel.saveDay()
+        }
+    )
     DayScreenContent(
         state,
         stateUpdater = viewModel::updateState,

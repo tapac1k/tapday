@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ExerciseListViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
-    val getExerciseListUseCase: GetExerciseListUseCase,
+    private val getExerciseListUseCase: GetExerciseListUseCase,
 ) : ViewModelWithUpdater<ExerciseListState, Unit, ExerciseListStateUpdater>(
     stateHandle.toRoute<ExerciseListRoute>().let { route ->
         ExerciseListState(

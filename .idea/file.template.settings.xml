@@ -3,12 +3,12 @@
   <component name="ExportableFileTemplateSettings">
     <default_templates>
       <template name="ComposeScreen.kt" file-name="${SCREEN_NAME}Screen" reformat="false" live-template-enabled="false">
-        <template name="ComposeScreen.kt.child.0.kt" file-name="${SCREEN_NAME}Updater&#10;" reformat="true" live-template-enabled="false" />
+        <template name="ComposeScreen.kt.child.0.kt" file-name="${SCREEN_NAME}Updater" reformat="true" live-template-enabled="false" />
         <template name="ComposeScreen.kt.child.1.kt" file-name="${SCREEN_NAME}Event" reformat="true" live-template-enabled="false" />
         <template name="ComposeScreen.kt.child.2.kt" file-name="${SCREEN_NAME}State" reformat="true" live-template-enabled="false" />
         <template name="ComposeScreen.kt.child.3.kt" file-name="${SCREEN_NAME}ViewModel" reformat="true" live-template-enabled="false" />
       </template>
-      <template name="ComposeScreen.kt.child.0.kt" file-name="${SCREEN_NAME}Updater&#10;" reformat="true" live-template-enabled="false" />
+      <template name="ComposeScreen.kt.child.0.kt" file-name="${SCREEN_NAME}Updater" reformat="true" live-template-enabled="false" />
       <template name="ComposeScreen.kt.child.1.kt" file-name="${SCREEN_NAME}Event" reformat="true" live-template-enabled="false" />
       <template name="ComposeScreen.kt.child.2.kt" file-name="${SCREEN_NAME}State" reformat="true" live-template-enabled="false" />
       <template name="ComposeScreen.kt.child.3.kt" file-name="${SCREEN_NAME}ViewModel" reformat="true" live-template-enabled="false" />

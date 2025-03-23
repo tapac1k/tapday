@@ -32,7 +32,7 @@ dependencies {
     implementation(project(":day:domain"))
 
     implementation(project(":utils:compose"))
-
+    implementation(libs.androidx.lifecycle.extensions)
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.paging.compose)
 

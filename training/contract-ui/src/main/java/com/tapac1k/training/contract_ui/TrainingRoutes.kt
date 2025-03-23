@@ -18,6 +18,12 @@ data class ExerciseListRoute(
 )
 
 @Serializable
+data class ExerciseSelectionRoute(
+    val query: String? = null,
+    val tags: List<String> = emptyList(),
+)
+
+@Serializable
 data class ExerciseDetailsRoute(
     val exerciseId: String? = null,
 )
@@ -26,4 +32,4 @@ data class ExerciseDetailsRoute(
 data object TrainingListRoute
 
 @Serializable
-data class TrainingDetails(val id: String? = null)
+data class TrainingDetailsRoute(val id: String? = null)

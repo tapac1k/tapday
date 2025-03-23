@@ -15,21 +15,21 @@ val provider = GoogleFont.Provider(
 
 val bodyFontFamily = FontFamily(
     Font(
-        googleFont = GoogleFont("Actor"),
+        googleFont = GoogleFont("Montserrat"),
         fontProvider = provider,
     )
 )
 
 val labelFontFamily = FontFamily(
     Font(
-        googleFont = GoogleFont("Aboreto"),
+        googleFont = GoogleFont("Playfair Display SC"),
         fontProvider = provider,
     )
 )
 
 val displayFontFamily = FontFamily(
     Font(
-        googleFont = GoogleFont("AR One Sans"),
+        googleFont = GoogleFont("Playfair Display"),
         fontProvider = provider,
     )
 )

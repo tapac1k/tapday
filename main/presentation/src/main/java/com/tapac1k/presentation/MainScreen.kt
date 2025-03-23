@@ -7,7 +7,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
@@ -45,6 +50,7 @@ import com.tapac1k.day.contract_ui.DayListNavigation
 import com.tapac1k.day.contract_ui.DayNavigation
 import com.tapac1k.day.contract_ui.DayRouter
 import com.tapac1k.settings.contract_ui.SettingsNavigation
+import com.tapac1k.settings.contract_ui.SettingsRoute
 import com.tapac1k.settings.contract_ui.SettingsRouter
 import com.tapac1k.training.contract.TrainingTag
 import com.tapac1k.training.contract_ui.ExerciseDetailsRoute
@@ -102,6 +108,7 @@ fun MainScreenContent(
                 enter = slideInVertically(initialOffsetY = { it }) + fadeIn()
             ) {
                 BottomNavigation(
+                    modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom)),
                     backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
                 ) {
                     topLevelDestinations.forEach { topLevelRoute ->
@@ -137,22 +144,11 @@ fun MainScreenContent(
             navController = navController,
             startDestination = DayListRoute
         ) {
-            composable<DayListRoute> { backStackEntry ->
-                dayRouter?.get()?.NavigateDayList(object : DayListNavigation {
-                    override fun openDayDetails(dayId: Long) {
-                        navController.safeNavigate(DayListRoute::class, DayRoute(dayId))
-                    }
-                })
+            dayRouter?.get()?.apply {
+                initGraph(navController, defaultBackController)
             }
-            composable<DayRoute> {
-                dayRouter?.get()?.NavigateDayScreen(object : DayNavigation, WithBackNavigation by defaultBackController {})
-            }
-            composable<Settings> { navBackStackEntry ->
-                settingsRouter?.get()?.NavigateToSettings(object : SettingsNavigation {
-                    override fun navigateTo(route: Any) {
-                        navController.safeNavigate(Settings::class, route)
-                    }
-                })
+            settingsRouter?.get()?.apply {
+                initGraph(navController, defaultBackController)
             }
             trainingRouter?.get()?.apply {
                 initGraph(navController, defaultBackController)
@@ -182,7 +178,7 @@ private val topLevelDestinations = listOf(
         Icons.Outlined.SportsGymnastics,
     ),
     Destination(
-        Settings,
+        SettingsRoute,
         "Settings",
         Icons.Filled.Settings,
         Icons.Outlined.Settings,

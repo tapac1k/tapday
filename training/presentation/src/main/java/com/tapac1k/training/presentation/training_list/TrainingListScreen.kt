@@ -23,6 +23,7 @@ fun TrainingListScreen(
     TrainingListScreenContent(
         onOpen = navigation::openTraining,
         onCreate = navigation::createTraining
+
     )
 }
 
@@ -40,7 +41,7 @@ fun TrainingListScreenContent(
                     .fillMaxWidth(),
                 onClick = { onCreate() }
             ) {
-                Text("Start exercise", modifier = Modifier.padding(10.dp))
+                Text("Start training", modifier = Modifier.padding(10.dp))
             }
         }
     ) { paddingValues ->

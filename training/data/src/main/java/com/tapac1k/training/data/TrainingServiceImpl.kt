@@ -2,9 +2,11 @@ package com.tapac1k.training.data
 
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.snapshots
 import com.tapac1k.training.contract.Exercise
+import com.tapac1k.training.contract.ExerciseGroup
 import com.tapac1k.training.contract.TrainingTag
 import com.tapac1k.training.domain.TrainingService
 import com.tapac1k.utils.common.resultOf
@@ -118,6 +120,82 @@ class TrainingServiceImpl @Inject constructor(
             .get()
             .await()
             .readExercise()
+    }
+
+    override suspend fun saveTraining(id: String?, exerciseGroups: List<ExerciseGroup>): Result<String> = resultOf {
+        val trainingId = id ?: db.collection("users")
+            .document(currentUserId!!)
+            .collection("trainings")
+            .document().id
+        val trainingRef = db.collection("users")
+            .document(currentUserId!!)
+            .collection("trainings")
+            .document(trainingId)
+
+        // 1. Prefetch existing exerciseGroups
+        val existingGroupsSnapshot = trainingRef.collection("exerciseGroups").get().await()
+        val existingGroupIds = existingGroupsSnapshot.documents.map { it.id }.toSet()
+        val newGroupIds = exerciseGroups.map { it.id }.toSet()
+
+        val groupsToDelete = existingGroupIds - newGroupIds
+        val groupsToUpsert = exerciseGroups.associateBy { it.id }
+
+        // 2. Prefetch sets for each existing group (needed for delete diff)
+        val existingSetsMap = mutableMapOf<String, Set<String>>() // groupId -> setIds
+        existingGroupsSnapshot.documents.forEach { groupDoc ->
+            val setsSnapshot = trainingRef.collection("exerciseGroups")
+                .document(groupDoc.id)
+                .collection("sets")
+                .get()
+                .await()
+            existingSetsMap[groupDoc.id] = setsSnapshot.documents.map { it.id }.toSet()
+        }
+
+        // 3. Run the transaction
+        db.runTransaction { transaction ->
+
+            // 🔥 Delete groups removed on the client
+            groupsToDelete.forEach { groupId ->
+                val groupRef = trainingRef.collection("exerciseGroups").document(groupId)
+                transaction.delete(groupRef)
+            }
+
+            // 🔥 Upsert new or existing groups and their sets
+            groupsToUpsert.forEach { (groupId, group) ->
+                val groupRef = trainingRef.collection("exerciseGroups").document(groupId)
+                transaction.set(groupRef, mapOf(
+                    "exerciseRef" to db.collection("users")
+                        .document(currentUserId!!)
+                        .collection("exercises")
+                        .document(group.exercise.id)
+                ))
+
+                // 🔥 Prefetched sets for this group (may be empty if new)
+                val existingSetIds = existingSetsMap[groupId] ?: emptySet()
+                val newSetIds = group.sets.map { it.id }.toSet()
+
+                // 🔥 Delete removed sets
+                val setsToDelete = existingSetIds - newSetIds
+                setsToDelete.forEach { setId ->
+                    val setRef = groupRef.collection("sets").document(setId)
+                    transaction.delete(setRef)
+                }
+
+                // 🔥 Add/Update sets
+                group.sets.forEach { set ->
+                    val setRef = groupRef.collection("sets").document(set.id)
+                    transaction.set(setRef, mapOf(
+                        "reps" to set.reps,
+                        "weight" to set.weight,
+                        "time" to set.time
+                    ))
+                }
+            }
+
+            // 🔥 Optionally update training metadata
+            transaction.set(trainingRef, mapOf("updatedAt" to System.currentTimeMillis()), SetOptions.merge())
+        }.await()
+        trainingId
     }
 
     private fun String.normalizeString() = this.trim().lowercase()
