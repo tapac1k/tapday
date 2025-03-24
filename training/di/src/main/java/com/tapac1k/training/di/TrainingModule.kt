@@ -1,5 +1,6 @@
 package com.tapac1k.training.di
 
+import com.tapac1k.training.contract.SyncDatabaseWithFirebase
 import com.tapac1k.training.data.TrainingServiceImpl
 import com.tapac1k.training.data.usecase.CreateTrainingTagUseCaseImpl
 import com.tapac1k.training.data.usecase.EditTrainingTagUseCaseImpl
@@ -8,6 +9,7 @@ import com.tapac1k.training.data.usecase.GetExerciseListUseCaseImpl
 import com.tapac1k.training.data.usecase.GetTrainingTagsUseCaseImpl
 import com.tapac1k.training.data.usecase.SaveExerciseUseCaseImpl
 import com.tapac1k.training.data.usecase.SaveTrainingUseCaseImpl
+import com.tapac1k.training.data.usecase.SyncDatabaseWithFirebaseImpl
 import com.tapac1k.training.domain.TrainingService
 import com.tapac1k.training.domain.usecase.CreateTrainingTagUseCase
 import com.tapac1k.training.domain.usecase.EditTrainingTagUseCase
@@ -52,5 +54,8 @@ interface TrainingViewModelModule {
 
     @Binds
     fun bindSaveTrainingUseCase(impl: SaveTrainingUseCaseImpl): SaveTrainingUseCase
+
+    @Binds
+    fun bindSyncDatabaseWithFirebaseUseCase(impl: SyncDatabaseWithFirebaseImpl): SyncDatabaseWithFirebase
 
 }

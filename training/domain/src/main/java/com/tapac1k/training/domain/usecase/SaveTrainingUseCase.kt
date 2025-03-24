@@ -3,5 +3,5 @@ package com.tapac1k.training.domain.usecase
 import com.tapac1k.training.contract.ExerciseGroup
 
 interface SaveTrainingUseCase {
-    suspend fun invoke(trainingId: String?, exercises: List<ExerciseGroup>): Result<String>
+    suspend fun invoke(trainingId: String?, exercises: List<ExerciseGroup>, date: Long, description: String): Result<String>
 }

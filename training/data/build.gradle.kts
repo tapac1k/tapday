@@ -28,6 +28,7 @@ dependencies {
     implementation(project(":training:contract"))
     implementation(project(":training:domain"))
 
+    implementation(project(":utils:database-mover"))
     implementation( libs.play.services.auth)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore.ktx)

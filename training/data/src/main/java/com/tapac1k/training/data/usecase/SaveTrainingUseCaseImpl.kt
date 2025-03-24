@@ -8,7 +8,7 @@ import javax.inject.Inject
 class SaveTrainingUseCaseImpl @Inject constructor(
     private val trainingService: TrainingService
 ) : SaveTrainingUseCase{
-    override suspend fun invoke(trainingId: String?, exercises: List<ExerciseGroup>): Result<String> {
-        return trainingService.saveTraining(trainingId, exercises)
+    override suspend fun invoke(trainingId: String?, exercises: List<ExerciseGroup>, date: Long, description: String): Result<String> {
+        return trainingService.saveTraining(trainingId, exercises, date, description)
     }
 }

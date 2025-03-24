@@ -38,7 +38,7 @@ class TrainingDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             saveRequests.collectLatest {
                 GlobalScope.launch {
-                    saveTrainingUseCase.invoke(id, state.value.exercises).onSuccess {
+                    saveTrainingUseCase.invoke(id, state.value.exercises, System.currentTimeMillis(), "").onSuccess {
                         id = it
                     }
                 }.join()

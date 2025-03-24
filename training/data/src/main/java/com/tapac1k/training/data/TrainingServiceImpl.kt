@@ -2,15 +2,19 @@ package com.tapac1k.training.data
 
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.snapshots
 import com.tapac1k.training.contract.Exercise
 import com.tapac1k.training.contract.ExerciseGroup
+import com.tapac1k.training.contract.TrainingInfo
 import com.tapac1k.training.contract.TrainingTag
 import com.tapac1k.training.domain.TrainingService
 import com.tapac1k.utils.common.resultOf
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -69,13 +73,24 @@ class TrainingServiceImpl @Inject constructor(
 
 
     override fun getExercises(): Flow<List<Exercise>> {
-        return db.collection("users")
-            .document(currentUserId!!)
-            .collection(EXERCISES_PATH)
-            .snapshots()
-            .map {
-                it.map { it.readExercise() }
-            }
+        return flow {
+            emit(
+                db.collection("users")
+                    .document(currentUserId!!)
+                    .collection(TRAINING_TAGS_PATH)
+                    .get().await()
+                    .associate {
+                        it.id to it.readTrainingTag()
+                    })
+        }.flatMapLatest { tagMap ->
+            db.collection("users")
+                .document(currentUserId!!)
+                .collection(EXERCISES_PATH)
+                .snapshots()
+                .map {
+                    it.map { it.readExercise(tagMap) }
+                }
+        }
     }
 
     override suspend fun saveExercise(exercise: Exercise): Result<Exercise> = resultOf {
@@ -112,17 +127,43 @@ class TrainingServiceImpl @Inject constructor(
         return@resultOf result
     }
 
-    override suspend fun getExerciseDetails(exerciseId: String): Result<Exercise> = resultOf{
+    override suspend fun getTrainings(date: Long?): Result<List<TrainingInfo>> = resultOf {
+        db.collection("users")
+            .document(currentUserId!!)
+            .collection("trainings")
+            .orderBy("date", Query.Direction.DESCENDING)
+            .run {
+                if (date != null) whereEqualTo("date", date) else this
+            }.get()
+            .await()
+            .map {
+                it.readTrainingInfo()
+            }
+    }
+
+    override suspend fun getExerciseDetails(exerciseId: String): Result<Exercise> = resultOf {
+        val tagMap = db.collection("users")
+            .document(currentUserId!!)
+            .collection(TRAINING_TAGS_PATH)
+            .get().await()
+            .associate {
+                it.id to it.readTrainingTag()
+            }
         db.collection("users")
             .document(currentUserId!!)
             .collection(EXERCISES_PATH)
             .document(exerciseId)
             .get()
             .await()
-            .readExercise()
+            .readExercise(tagMap)
     }
 
-    override suspend fun saveTraining(id: String?, exerciseGroups: List<ExerciseGroup>): Result<String> = resultOf {
+    override suspend fun saveTraining(
+        id: String?,
+        exerciseGroups: List<ExerciseGroup>,
+        date: Long,
+        description: String,
+    ): Result<String> = resultOf {
         val trainingId = id ?: db.collection("users")
             .document(currentUserId!!)
             .collection("trainings")
@@ -163,37 +204,44 @@ class TrainingServiceImpl @Inject constructor(
             // 🔥 Upsert new or existing groups and their sets
             groupsToUpsert.forEach { (groupId, group) ->
                 val groupRef = trainingRef.collection("exerciseGroups").document(groupId)
-                transaction.set(groupRef, mapOf(
-                    "exerciseRef" to db.collection("users")
-                        .document(currentUserId!!)
-                        .collection("exercises")
-                        .document(group.exercise.id)
-                ))
+                transaction.set(
+                    groupRef, mapOf(
+                        "exerciseRef" to db.collection("users")
+                            .document(currentUserId!!)
+                            .collection("exercises")
+                            .document(group.exercise.id)
+                    )
+                )
 
-                // 🔥 Prefetched sets for this group (may be empty if new)
                 val existingSetIds = existingSetsMap[groupId] ?: emptySet()
                 val newSetIds = group.sets.map { it.id }.toSet()
 
-                // 🔥 Delete removed sets
                 val setsToDelete = existingSetIds - newSetIds
                 setsToDelete.forEach { setId ->
                     val setRef = groupRef.collection("sets").document(setId)
                     transaction.delete(setRef)
                 }
 
-                // 🔥 Add/Update sets
                 group.sets.forEach { set ->
                     val setRef = groupRef.collection("sets").document(set.id)
-                    transaction.set(setRef, mapOf(
-                        "reps" to set.reps,
-                        "weight" to set.weight,
-                        "time" to set.time
-                    ))
+                    transaction.set(
+                        setRef, mapOf(
+                            "reps" to set.reps,
+                            "weight" to set.weight,
+                            "time" to set.time
+                        )
+                    )
                 }
             }
 
-            // 🔥 Optionally update training metadata
-            transaction.set(trainingRef, mapOf("updatedAt" to System.currentTimeMillis()), SetOptions.merge())
+            transaction.set(
+                trainingRef,
+                mapOf(
+                    "updatedAt" to System.currentTimeMillis(),
+                    "date" to date,
+                    "description" to description
+                ), SetOptions.merge()
+            )
         }.await()
         trainingId
     }
