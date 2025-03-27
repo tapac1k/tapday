@@ -16,7 +16,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +29,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,13 +45,17 @@ import com.tapac1k.training.contract.Exercise
 import com.tapac1k.training.contract.ExerciseGroup
 import com.tapac1k.training.contract.ExerciseSet
 import com.tapac1k.training.contract.TrainingTag
+import com.tapac1k.training.presentation.widget.ExerciseGroupItem
 import com.tapac1k.training.presentation.widget.ExerciseSetItem
+import com.tapac1k.training.presentation.widget.dateFormat
+import com.tapac1k.training.presentation.widget.dateFullFormat
 
 @Composable
 fun TrainingDetailsScreen(
     viewModel: TrainingDetailsViewModel = viewModel(),
     onBack: () -> Unit = { },
-    onChooseExercise: () -> Unit = { },
+    onNewExerciseGroup: () -> Unit = { },
+    onExerciseHistory: (String) -> Unit = { },
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -58,8 +68,9 @@ fun TrainingDetailsScreen(
     TrainingDetailsScreenContent(
         state = state,
         onBack = onBack,
-        onAddExercise = onChooseExercise,
-        updater = viewModel::updateState
+        onAddExercise = onNewExerciseGroup,
+        updater = viewModel::updateState,
+        onExerciseHistory = onExerciseHistory
     )
 }
 
@@ -68,12 +79,13 @@ fun TrainingDetailsDispatchDialog(
     state: DialogState,
     updater: (TrainingDetailsUpdater) -> Unit = {},
 ) {
+    val onDismiss = { updater.invoke(TrainingDetailsUpdater.DismissDialogs) }
     when (state) {
         is DialogState.ConfirmRemoveExerciseGroup -> TODO()
         is DialogState.SetupSet -> {
             SetupSetDialog(
                 set = state.set,
-                onDismiss = { updater.invoke(TrainingDetailsUpdater.DismissDialogs) },
+                onDismiss = onDismiss,
                 onSave = { id: String?, weight: Float?, reps: Int?, time: Int? ->
                     updater.invoke(
                         TrainingDetailsUpdater.SetupSetConfirm(
@@ -89,6 +101,22 @@ fun TrainingDetailsDispatchDialog(
                 timeBased = state.timeBased
             )
         }
+
+        is DialogState.DatePicker -> {
+            SetupDateDialog(
+                startDate = state.date,
+                onDismiss = onDismiss,
+                onSaveDate = { updater.invoke(TrainingDetailsUpdater.UpdateDate(it)) }
+            )
+        }
+
+        is DialogState.SetDescriptionDialog -> {
+            SetDescriptionDialog(
+                text = state.description,
+                onDismiss = onDismiss,
+                onSave = { updater.invoke(TrainingDetailsUpdater.UpdateDescription(it)) }
+            )
+        }
     }
 }
 
@@ -97,7 +125,8 @@ fun TrainingDetailsScreenContent(
     state: TrainingDetailsState = TrainingDetailsState(),
     onBack: () -> Unit = { },
     onAddExercise: () -> Unit = { },
-    updater: (TrainingDetailsUpdater) -> Unit = {}
+    updater: (TrainingDetailsUpdater) -> Unit = {},
+    onExerciseHistory: (String) -> Unit = { },
 ) {
     Scaffold(
         topBar = {
@@ -109,7 +138,17 @@ fun TrainingDetailsScreenContent(
                 IconButton(onClick = onBack) {
                     Icon(Icons.AutoMirrored.Rounded.ArrowBack, "")
                 }
-                Spacer(Modifier.weight(1f))
+                Column(Modifier.weight(1f)) {
+                    val date = state.date
+                    Text(dateFormat.format(date).capitalize(Locale.current), style = MaterialTheme.typography.headlineSmall)
+                    Text(dateFullFormat.format(date), style = MaterialTheme.typography.labelSmall)
+                }
+                IconButton(onClick = { updater.invoke(TrainingDetailsUpdater.ShowDatePicker) }) {
+                    Icon(Icons.Filled.EditCalendar, "Set date")
+                }
+                IconButton(onClick = { updater.invoke(TrainingDetailsUpdater.ShowDescriptionDialog) }, Modifier.alpha(if (state.description.isNotBlank()) 1f else 0.5f)) {
+                    Icon(Icons.Filled.Description, "Set description")
+                }
             }
         },
         bottomBar = {
@@ -126,13 +165,18 @@ fun TrainingDetailsScreenContent(
     ) { paddingValues ->
         LazyColumn(contentPadding = paddingValues) {
             items(state.exercises.count(), { state.exercises[it].id }) {
+                val exercise = state.exercises[it]
                 ExerciseGroupItem(
-                    exerciseGroup = state.exercises[it],
+                    exerciseGroup = exercise,
+                    isHistoryItem = false,
                     onAddSet = {
-                        updater.invoke(TrainingDetailsUpdater.AddSet(state.exercises[it]))
+                        updater.invoke(TrainingDetailsUpdater.AddSet(exercise))
                     },
                     onEditSet = { set ->
-                        updater.invoke(TrainingDetailsUpdater.EditSet(state.exercises[it], set))
+                        updater.invoke(TrainingDetailsUpdater.EditSet(exercise, set))
+                    },
+                    onExerciseClick = {
+                        onExerciseHistory(exercise.exercise.id)
                     }
                 )
             }
@@ -141,46 +185,7 @@ fun TrainingDetailsScreenContent(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun ExerciseGroupItem(
-    exerciseGroup: ExerciseGroup,
-    onAddSet: () -> Unit = {},
-    onEditSet: (ExerciseSet) -> Unit = {},
-) {
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-            .background(MaterialTheme.colorScheme.surfaceContainer, shape = RoundedCornerShape(8.dp))
-            .padding(8.dp)
-    ) {
-        Text(text = exerciseGroup.exercise.name, Modifier.padding(4.dp), style = MaterialTheme.typography.labelLarge)
-        FlowRow(Modifier.padding(4.dp), ) {
 
-            exerciseGroup.sets.forEach{
-                ExerciseSetItem(exerciseGroup.exercise.withWeight, exerciseGroup.exercise.timeBased, it, Modifier.padding(4.dp).height(30.dp).clickable {
-                    onEditSet(it)
-                })
-            }
-            Box(
-                modifier = Modifier
-                    .clickable { onAddSet() }.padding(4.dp).size(40.dp, 30.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = RoundedCornerShape(percent = 100)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    "+", style = MaterialTheme.typography.labelLarge,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-            }
-        }
-    }
-}
 
 @Composable
 fun TrainingDetailsScreenPreview() {
@@ -203,8 +208,10 @@ fun TrainingDetailsScreenPreview() {
                             withWeight = true,
                             timeBased = false
                         ),
+                        date = 1243L,
                         sets = listOf(
                             ExerciseSet("1", 1f, 1, 1),
+                            ExerciseSet("1", 1f, null, 1),
                             ExerciseSet("2", 1f, 1, 1),
                             ExerciseSet("3", 1f, 1, 1),
                         )

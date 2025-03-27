@@ -1,6 +1,5 @@
 package com.tapac1k.training.presentation
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -10,6 +9,7 @@ import androidx.navigation.compose.dialog
 import com.tapac1k.compose.safeNavigate
 import com.tapac1k.training.contract.TrainingTag
 import com.tapac1k.training.contract_ui.ExerciseDetailsRoute
+import com.tapac1k.training.contract_ui.ExerciseHistoryRoute
 import com.tapac1k.training.contract_ui.ExerciseListNavigation
 import com.tapac1k.training.contract_ui.ExerciseListRoute
 import com.tapac1k.training.contract_ui.ExerciseSelectionRoute
@@ -21,11 +21,11 @@ import com.tapac1k.training.contract_ui.TrainingTagNavigation
 import com.tapac1k.training.contract_ui.TrainingTagRoute
 import com.tapac1k.training.contract_ui.TrainingTagsRoute
 import com.tapac1k.training.presentation.exercise.ExerciseDetailsScreen
+import com.tapac1k.training.presentation.exercise_history.ExerciseHistoryScreen
 import com.tapac1k.training.presentation.exercise_list.ExerciseListScreen
 import com.tapac1k.training.presentation.exercise_list.ExerciseSelectionScreen
 import com.tapac1k.training.presentation.tag.TagDialogScreen
 import com.tapac1k.training.presentation.tags.TrainingTagsScreen
-import com.tapac1k.training.presentation.tags.TrainingTagsViewModel
 import com.tapac1k.training.presentation.training_details.TrainingDetailsScreen
 import com.tapac1k.training.presentation.training_details.TrainingDetailsViewModel
 import com.tapac1k.training.presentation.training_list.TrainingListScreen
@@ -81,8 +81,11 @@ class TrainingRouterImpl @Inject constructor(
             TrainingDetailsScreen(
                 hiltViewModel(),
                 onBack = navController::navigateUp,
-                onChooseExercise = {
+                onNewExerciseGroup = {
                     navController.safeNavigate(TrainingDetailsRoute::class, ExerciseSelectionRoute())
+                },
+                onExerciseHistory = {
+                    navController.safeNavigate(TrainingDetailsRoute::class, ExerciseHistoryRoute(it))
                 }
             )
         }
@@ -102,6 +105,15 @@ class TrainingRouterImpl @Inject constructor(
                     override fun openCreateExercise() {
                         navController.safeNavigate(ExerciseSelectionRoute::class, ExerciseDetailsRoute())
                     }
+                }
+            )
+        }
+        composable<ExerciseHistoryRoute> {
+            ExerciseHistoryScreen(
+                hiltViewModel(),
+                onBack = navController::navigateUp,
+                openTraining = {
+                    navController.safeNavigate(ExerciseHistoryRoute::class, TrainingDetailsRoute(it))
                 }
             )
         }

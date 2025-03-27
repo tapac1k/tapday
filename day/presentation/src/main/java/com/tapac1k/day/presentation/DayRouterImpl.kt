@@ -10,6 +10,7 @@ import com.tapac1k.day.contract_ui.DayListRoute
 import com.tapac1k.day.contract_ui.DayNavigation
 import com.tapac1k.day.contract_ui.DayRoute
 import com.tapac1k.day.contract_ui.DayRouter
+import com.tapac1k.day.presentation.day.DayScreen
 import com.tapac1k.day.presentation.daylist.DayListScreen
 import com.tapac1k.utils.common.WithBackNavigation
 import javax.inject.Inject

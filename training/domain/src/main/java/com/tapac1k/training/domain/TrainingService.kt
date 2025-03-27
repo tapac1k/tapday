@@ -2,8 +2,10 @@ package com.tapac1k.training.domain
 
 import com.tapac1k.training.contract.Exercise
 import com.tapac1k.training.contract.ExerciseGroup
+import com.tapac1k.training.contract.ShortTrainingInfo
 import com.tapac1k.training.contract.TrainingInfo
 import com.tapac1k.training.contract.TrainingTag
+import com.tapac1k.training.domain.usecase.GetExerciseHistoryUseCase
 import kotlinx.coroutines.flow.Flow
 
 interface TrainingService {
@@ -27,5 +29,8 @@ interface TrainingService {
         description: String,
     ): Result<String>
 
-    suspend fun getTrainings(date: Long? = null): Result<List<TrainingInfo>>
+    suspend fun getTrainings(date: Long? = null, id: String?): Result<List<ShortTrainingInfo>>
+
+    suspend fun getTraining(id: String): Result<TrainingInfo>
+    suspend fun getSetsByExercise(exerciseId: String, historyKey: GetExerciseHistoryUseCase.HistoryKey?): Result<List<Pair<String, ExerciseGroup>>>
 }

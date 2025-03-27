@@ -8,6 +8,7 @@ import com.tapac1k.compose.ViewModelWithUpdater
 import com.tapac1k.training.contract.ExerciseGroup
 import com.tapac1k.training.contract.ExerciseSet
 import com.tapac1k.training.contract_ui.TrainingDetailsRoute
+import com.tapac1k.training.domain.usecase.GetTrainingUseCase
 import com.tapac1k.training.domain.usecase.SaveTrainingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
@@ -21,12 +22,13 @@ import javax.inject.Inject
 class TrainingDetailsViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
     private val saveTrainingUseCase: SaveTrainingUseCase,
+    private val getTrainingUseCase: GetTrainingUseCase,
 ) : ViewModelWithUpdater<TrainingDetailsState, TrainingDetailsEvent, TrainingDetailsUpdater>(
     TrainingDetailsState()
 ) {
     private val saveRequests = MutableSharedFlow<Unit>()
     var id = stateHandle.toRoute<TrainingDetailsRoute>().id
-
+    var updated = false
     var generateId = 0
         get() {
             field++
@@ -37,12 +39,30 @@ class TrainingDetailsViewModel @Inject constructor(
         Log.d("TrainingDetailsViewModel", "init $this")
         viewModelScope.launch {
             saveRequests.collectLatest {
+                if (!updated) return@collectLatest
                 GlobalScope.launch {
                     saveTrainingUseCase.invoke(id, state.value.exercises, System.currentTimeMillis(), "").onSuccess {
                         id = it
                     }
                 }.join()
             }
+        }
+        viewModelScope.launch {
+            id?.let {
+                getTrainingUseCase.invoke(it).onSuccess { training ->
+                    _state.update {
+                        it.copy(
+                            exercises = training.exerciseGroup,
+                            date = training.date,
+                            loading = false,
+                        )
+                    }
+                }.onFailure {
+                    it.printStackTrace()
+                    _events.emit(TrainingDetailsEvent.ShowToast(it.message ?: "Something went wrong"))
+                    _events.emit(TrainingDetailsEvent.Finish)
+                }
+            } ?: _state.update { it.copy(loading = false) }
         }
     }
 
@@ -53,14 +73,19 @@ class TrainingDetailsViewModel @Inject constructor(
     }
 
     override fun processUpdate(updater: TrainingDetailsUpdater) {
+        if (state.value.loading) return
+        if (updater is TrainingDetailsUpdater.ChangeTraingingUpdater) {
+            updated = true
+        }
         when (updater) {
             is TrainingDetailsUpdater.AddExercise -> {
                 _state.update {
                     it.copy(
                         exercises = it.exercises + ExerciseGroup(
-                            generateId.toString(),
-                            updater.exercise,
-                            emptyList(),
+                            id = generateId.toString(),
+                            exercise = updater.exercise,
+                            date = it.date,
+                            sets = emptyList(),
                         )
                     )
                 }
@@ -92,16 +117,37 @@ class TrainingDetailsViewModel @Inject constructor(
                 }
             }
 
-            is TrainingDetailsUpdater.ConfirmRemoveExercise -> TODO()
-            is TrainingDetailsUpdater.DeleteSet -> TODO()
             is TrainingDetailsUpdater.DismissDialogs -> {
                 _state.update {
                     it.copy(dialogState = null)
                 }
             }
-            is TrainingDetailsUpdater.RemoveExercise -> TODO()
             is TrainingDetailsUpdater.SetupSetConfirm -> {
                 updateSet(updater.exerciseGroupId, updater.setId, updater.weight, updater.time, updater.reps)
+            }
+
+            TrainingDetailsUpdater.ShowDatePicker -> {
+                _state.update {
+                    it.copy(dialogState = DialogState.DatePicker(it.date))
+                }
+            }
+            TrainingDetailsUpdater.ShowDescriptionDialog -> {
+                _state.update {
+                    it.copy(dialogState = DialogState.SetDescriptionDialog(it.description))
+                }
+            }
+            is TrainingDetailsUpdater.RemoveExercise -> TODO()
+            is TrainingDetailsUpdater.DeleteSet -> TODO()
+            is TrainingDetailsUpdater.ConfirmRemoveExercise -> TODO()
+            is TrainingDetailsUpdater.UpdateDate -> {
+                _state.update {
+                    it.copy(date = updater.date)
+                }
+            }
+            is TrainingDetailsUpdater.UpdateDescription -> {
+                _state.update {
+                    it.copy(description = updater.description)
+                }
             }
         }
     }

@@ -1,19 +1,16 @@
-package com.tapac1k.day.presentation
+package com.tapac1k.day.presentation.day
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.tapac1k.compose.ViewModelWithUpdater
 import com.tapac1k.day.contract_ui.DayRoute
 import com.tapac1k.day.domain.usecase.GetDayUseCase
 import com.tapac1k.day.domain.usecase.SaveDayUseCase
+import com.tapac1k.day.presentation.StateUpdate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,19 +20,14 @@ class DayViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
     private val saveDayUseCase: SaveDayUseCase,
     private val getDayUseCase: GetDayUseCase,
-) : ViewModel() {
+) : ViewModelWithUpdater<DayState, DayEvent, StateUpdate>(
+    DayState()
+)
+{
     private var updated = false
     private val day = stateHandle.toRoute<DayRoute>()
-    private val _state = MutableStateFlow(DayState())
-    private val _updates = MutableSharedFlow<StateUpdate>()
-    val state = _state.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.Default) {
-            _updates.collectLatest {
-                processStateUpdate(it)
-            }
-        }
         viewModelScope.launch(Dispatchers.IO) {
             getDayUseCase.invoke(day.day).onSuccess { result ->
                 _state.update { it.copy(dayActivity = result.dayActivity) }
@@ -43,26 +35,22 @@ class DayViewModel @Inject constructor(
         }
     }
 
-    fun updateState(update: StateUpdate) = viewModelScope.launch {
+    override fun processUpdate(updater: StateUpdate) {
         updated = true
-        _updates.emit(update)
-    }
-
-    private fun processStateUpdate(stateUpdate: StateUpdate) {
-        when (stateUpdate)  {
+        when (updater)  {
             is StateUpdate.UpdateMood -> {
                 _state.update {
-                    it.copy(dayActivity = it.dayActivity.copy(mood = stateUpdate.mood))
+                    it.copy(dayActivity = it.dayActivity.copy(mood = updater.mood))
                 }
             }
             is StateUpdate.UpdateState -> {
                 _state.update {
-                    it.copy(dayActivity = it.dayActivity.copy(state = stateUpdate.state))
+                    it.copy(dayActivity = it.dayActivity.copy(state = updater.state))
                 }
             }
             is StateUpdate.UpdateSleepHours -> {
                 _state.update {
-                    it.copy(dayActivity = it.dayActivity.copy(sleepHours = stateUpdate.sleepHours))
+                    it.copy(dayActivity = it.dayActivity.copy(sleepHours = updater.sleepHours))
                 }
             }
 

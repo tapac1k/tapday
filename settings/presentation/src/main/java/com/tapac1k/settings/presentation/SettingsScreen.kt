@@ -89,7 +89,7 @@ fun SettingsScreenContent(
                 SettingGroup(settingProvider, { settingsNavigation?.navigateTo(it) })
             }
 
-       /*     Column(
+            Column(
                 Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
@@ -110,7 +110,7 @@ fun SettingsScreenContent(
                     Text(text = "Sync", Modifier.weight(1f))
                 }
 
-            }*/
+            }
             Spacer(Modifier.weight(1f))
             Button(
                 modifier = Modifier

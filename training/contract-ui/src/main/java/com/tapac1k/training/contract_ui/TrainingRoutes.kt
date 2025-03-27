@@ -33,3 +33,6 @@ data object TrainingListRoute
 
 @Serializable
 data class TrainingDetailsRoute(val id: String? = null)
+
+@Serializable
+data class ExerciseHistoryRoute(val id: String)

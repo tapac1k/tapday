@@ -69,7 +69,8 @@ class SyncDatabaseWithFirebaseImpl @Inject constructor(
                                     weight = it.weight.takeIf { it >= 0 },
                                     time = it.time.roundToInt().takeIf { it >= 0 },
                                     )
-                            }
+                            },
+                            date = training.date
                         )
                     )
                     exerciseGroupSets.clear()
@@ -90,7 +91,8 @@ class SyncDatabaseWithFirebaseImpl @Inject constructor(
                                 weight = it.weight.takeIf { it >= 0 },
                                 time = it.time.roundToInt().takeIf { it >= 0 },
                                 )
-                        }
+                        },
+                        date = training.date
                     )
                 )
             }

@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.tapac1k.training.contract.ExerciseSet
 
@@ -57,35 +58,50 @@ fun SetupSetDialog(
             if (withWeight) {
                 TextField(
                     currentWeight, { currentWeight = it },
-                    Modifier.fillMaxWidth().padding(8.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
                     placeholder = {
                         Text("Weight")
                     },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Number),
                 )
             }
             if (timeBased) {
                 TextField(
-                    currentTime, { currentTime = it },
-                    Modifier.fillMaxWidth().padding(8.dp),
+                    currentTime, {
+                        if (it.isEmpty() || it.all { it.isDigit() }) currentTime = it
+                    },
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
                     placeholder = {
                         Text("Time")
                     },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {onSaveClick()})
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Decimal),
+                    keyboardActions = KeyboardActions(onDone = { onSaveClick() })
                 )
             } else {
                 TextField(
-                    currentReps, { currentReps = it },
-                    Modifier.fillMaxWidth().padding(8.dp),
+                    currentReps, {
+                        if (it.isEmpty() || it.all { it.isDigit() }) currentReps = it
+                    },
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
                     placeholder = {
                         Text("Reps")
                     },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {onSaveClick()})
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Decimal),
+                    keyboardActions = KeyboardActions(onDone = { onSaveClick() })
                 )
             }
-            Button(onClick = onSaveClick, modifier = Modifier.padding(4.dp).align(Alignment.End)) {
+            Button(
+                onClick = onSaveClick, modifier = Modifier
+                    .padding(4.dp)
+                    .align(Alignment.End)
+            ) {
                 Text("Save")
             }
         }
