@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tapac1k.compose.theme.TapMyDayTheme
-import com.tapac1k.main.contract_ui.SettingProvider
+import com.tapac1k.settings.contract_ui.SettingProvider
 import com.tapac1k.settings.contract_ui.SettingsNavigation
 
 @Composable

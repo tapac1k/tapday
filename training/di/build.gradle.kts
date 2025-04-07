@@ -28,7 +28,7 @@ dependencies {
     api(project(":training:domain"))
     api(project(":training:data"))
 
-    implementation(project(":main:contract-ui"))
+    implementation(project(":settings:contract-ui"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

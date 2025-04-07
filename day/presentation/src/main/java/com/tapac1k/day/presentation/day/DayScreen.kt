@@ -1,41 +1,65 @@
 package com.tapac1k.day.presentation.day
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tapac1k.compose.LifecycleEffect
 import com.tapac1k.compose.theme.TapMyDayTheme
 import com.tapac1k.compose.widgets.TopBar
 import com.tapac1k.day.contract_ui.DayNavigation
 import com.tapac1k.day.presentation.widget.ActivityRings
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.tapac1k.compose.LifecycleEffect
-import com.tapac1k.day.presentation.StateUpdate
+import com.tapac1k.day.presentation.widget.ActivityView
 
 @Composable
 fun DayScreen(
     viewModel: DayViewModel = viewModel(),
     dayNavigation: DayNavigation
 ) {
-    val state by  viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     LifecycleEffect(
         lifecycleOwner,
@@ -54,30 +78,59 @@ fun DayScreen(
 fun DayScreenContent(
     dayState: DayState = DayState(),
     stateUpdater: (StateUpdate) -> Unit = {},
-    onBack:() -> Unit = {},
+    onBack: () -> Unit = {},
 ) {
-    Surface(
-        Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)) {
-        Column(Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))) {
-            TopBar {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Rounded.ArrowBack, "")
-                }
+    var editActivity by rememberSaveable { mutableStateOf(false) }
+    Scaffold(Modifier.fillMaxSize().imePadding(),topBar = {
+        TopBar {
+            IconButton(onClick = onBack) {
+                Icon(Icons.AutoMirrored.Rounded.ArrowBack, "")
             }
-
-            LazyColumn {
-                item("Rings") {
+            Spacer(Modifier.weight(1f))
+            ActivityView(dayState.dayActivity, Modifier.padding(end = 16.dp).clickable { editActivity = !editActivity }.size(30.dp))
+        }
+    }) { padding ->
+        LazyColumn(contentPadding = padding, modifier = Modifier.fillMaxSize().consumeWindowInsets(padding)) {
+            item("Rings") {
+                AnimatedVisibility(
+                    editActivity,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically()
+                ) {
                     ActivityRings(
                         dayState.dayActivity,
                         onMoodUpdate = { stateUpdater(StateUpdate.UpdateMood(it)) },
                         onStateUpdate = { stateUpdater(StateUpdate.UpdateState(it)) },
-                        onSleepUpdate = { stateUpdater(StateUpdate.UpdateSleepHours(it)) },)
+                        onSleepUpdate = { stateUpdater(StateUpdate.UpdateSleepHours(it)) },
+                    )
+                }
+
+            }
+            item("Description") {
+                DescriptionText(dayState.description, Modifier.padding(horizontal = 16.dp)) {
+                    stateUpdater(StateUpdate.UpdateDescription(it))
                 }
             }
         }
     }
+}
+
+@Composable
+private fun DescriptionText(
+    description: TextFieldValue,
+    modifier: Modifier = Modifier,
+    updateText: (TextFieldValue) -> Unit = {},
+) {
+    OutlinedTextField(
+        value = description,
+        onValueChange = {
+            updateText(it)
+        },
+        keyboardOptions = KeyboardOptions(autoCorrectEnabled = false, capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text),
+        label = { Text("Description") },
+        modifier = modifier.fillMaxWidth(),
+        minLines = 5
+    )
 }
 
 

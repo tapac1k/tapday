@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tapac1k.compose.theme.TapMyDayTheme
@@ -37,27 +38,44 @@ fun DayViewItem(
     onClick: () -> Unit = {}
 ) {
     val active = dayInfo.updated != null
-    Row(
+
+    Column(
         modifier
             .clickable { onClick() }
             .background(color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = if (active) 0.2f else 0.1f), shape = RoundedCornerShape(6.dp))
             .border(1.dp, color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = if (active) 0.7f else 0.4f), shape = RoundedCornerShape(6.dp))
-            .padding(horizontal = 16.dp, vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+            .padding(horizontal = 16.dp, vertical = 16.dp).alpha(if (active) 1f else 0.4f),) {
 
-        Column(Modifier.weight(1f).alpha(if (active) 1f else 0.4f)) {
-            Text(dayInfo.getWeek(), style = MaterialTheme.typography.headlineMedium)
-            Text(dayInfo.getFormattedDate(), style = MaterialTheme.typography.labelSmall)
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Column(Modifier
+                .weight(1f)
+
+            ) {
+                Text(dayInfo.getWeek(), style = MaterialTheme.typography.headlineMedium)
+                Text(dayInfo.getFormattedDate(), style = MaterialTheme.typography.labelSmall)
+            }
+            if (!active) {
+                Icon(
+                    Icons.Rounded.Add, "add",
+                )
+            } else {
+                ActivityView(modifier = Modifier.size(40.dp), dayActivity = dayInfo.dayActivity)
+            }
         }
-        if (!active) {
-            Icon(
-                Icons.Rounded.Add, "add",
-            )
-        } else {
-            ActivityView(Modifier.size(40.dp), dayActivity = dayInfo.dayActivity)
-        }
+
+        Text(
+            dayInfo.description,
+            Modifier.fillMaxWidth().padding(top = 8.dp),
+            maxLines = 1,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.outline,
+            overflow = TextOverflow.Ellipsis
+        )
     }
+
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
@@ -77,23 +95,24 @@ fun DayViewItemPreview() {
     TapMyDayTheme {
         Surface {
 
-        Column(
-            Modifier
-                .height(320.dp)
-                .width(300.dp)
-        ) {
-            DayViewItem(
+            Column(
                 Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp), DayInfo(140, DayActivity(21f, 75, 42), 20)
-            )
+                    .height(320.dp)
+                    .width(300.dp)
+            ) {
+                DayViewItem(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    DayInfo(140, DayActivity(21f, 75, 42), 20, "asd asd  faggasdasdfouh sasuid \n asdfisahfi")
+                )
 
-            DayViewItem(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp), DayInfo(140, DayActivity(2f, 75, 42), null)
-            )
-        }
+                DayViewItem(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp), DayInfo(140, DayActivity(2f, 75, 42), null, "dsfadaadfs asd fsa fas fd as fasfasfdasfa")
+                )
+            }
 
         }
     }

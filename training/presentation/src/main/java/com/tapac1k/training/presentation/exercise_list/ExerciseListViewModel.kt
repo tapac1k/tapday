@@ -1,14 +1,12 @@
 package com.tapac1k.training.presentation.exercise_list
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.navigation.toRoute
 import com.tapac1k.compose.ViewModelWithUpdater
 import com.tapac1k.training.contract_ui.ExerciseListRoute
 import com.tapac1k.training.domain.usecase.GetExerciseListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
@@ -20,8 +18,8 @@ class ExerciseListViewModel @Inject constructor(
 ) : ViewModelWithUpdater<ExerciseListState, Unit, ExerciseListStateUpdater>(
     stateHandle.toRoute<ExerciseListRoute>().let { route ->
         ExerciseListState(
-            query = route.query,
-            tags = route.tags
+            query = route.query?.let { TextFieldValue(it) },
+            tags = emptySet()
         )
     }
 ) {
@@ -39,7 +37,7 @@ class ExerciseListViewModel @Inject constructor(
     }
 
     override fun processUpdate(updater: ExerciseListStateUpdater) {
-        when(updater) {
+        when (updater) {
             is ExerciseListStateUpdater.UpdateQuery -> {
                 _state.update {
                     it.copy(
@@ -47,10 +45,27 @@ class ExerciseListViewModel @Inject constructor(
                     )
                 }
             }
+
             is ExerciseListStateUpdater.ClearQuery -> {
                 _state.update {
                     it.copy(
                         query = null
+                    )
+                }
+            }
+
+            is ExerciseListStateUpdater.AddFilterTag -> {
+                _state.update {
+                    it.copy(
+                        tags = it.tags + updater.tag
+                    )
+                }
+            }
+
+            is ExerciseListStateUpdater.RemoveFilterTag -> {
+                _state.update {
+                    it.copy(
+                        tags = it.tags - updater.tag
                     )
                 }
             }

@@ -33,6 +33,7 @@ dependencies {
     api(project(":day:data"))
     api(project(":day:presentation"))
 
+    implementation(project(":settings:contract-ui"))
     implementation(project(":utils:compose"))
 
     implementation(libs.androidx.core.ktx)

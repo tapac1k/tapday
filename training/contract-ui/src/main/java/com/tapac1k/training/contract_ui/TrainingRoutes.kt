@@ -1,5 +1,6 @@
 package com.tapac1k.training.contract_ui
 
+import com.tapac1k.training.contract.TrainingTag
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,7 +15,6 @@ data class TrainingTagRoute(
 @Serializable
 data class ExerciseListRoute(
     val query: String? = null,
-    val tags: List<String> = emptyList(),
 )
 
 @Serializable

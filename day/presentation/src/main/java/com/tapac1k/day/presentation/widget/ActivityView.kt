@@ -18,7 +18,7 @@ import com.tapac1k.compose.widgets.CircularView
 import com.tapac1k.day.contract.DayActivity
 
 @Composable
-fun ActivityView(modifier: Modifier = Modifier, dayActivity: DayActivity) {
+fun ActivityView(dayActivity: DayActivity, modifier: Modifier = Modifier, ) {
     Box (modifier = modifier){
         CircularView(modifier = Modifier.fillMaxSize(), progress = dayActivity.sleepHours / 16f, strokeWidth = 2.dp, ringColor = sleepColor)
         CircularView(modifier = Modifier.fillMaxSize().padding(3.dp), progress = dayActivity.state / 100f, strokeWidth = 2.dp, ringColor = stateColor)
@@ -42,7 +42,7 @@ fun ActivityViewPreviewDark() {
 fun ActivityViewPreview() {
     TapMyDayTheme {
         Surface {
-            ActivityView(Modifier.padding(8.dp).size(50.dp), DayActivity(2f, 75, 42))
+            ActivityView(DayActivity(2f, 75, 42), Modifier.padding(8.dp).size(50.dp), )
         }
     }
 }

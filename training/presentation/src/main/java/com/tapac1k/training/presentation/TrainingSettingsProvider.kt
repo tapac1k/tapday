@@ -1,6 +1,6 @@
 package com.tapac1k.training.presentation
 
-import com.tapac1k.main.contract_ui.SettingProvider
+import com.tapac1k.settings.contract_ui.SettingProvider
 import com.tapac1k.training.contract_ui.ExerciseListRoute
 import com.tapac1k.training.contract_ui.TrainingTagsRoute
 import javax.inject.Inject

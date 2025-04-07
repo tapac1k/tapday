@@ -9,7 +9,7 @@ import java.util.Locale
 object DayUtil {
     @SuppressLint("ConstantLocale")
     private val dayOfWeekFormat = SimpleDateFormat("EEEE", Locale.US) // "EEEE" gives full weekday name
-    private val shortDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.US)
+    private val shortDateFormat = SimpleDateFormat("dd MMM yyyy", Locale.US)
 
     fun getDayOfWeek(day: Long): String {
         return dayOfWeekFormat.format(day.toDate())

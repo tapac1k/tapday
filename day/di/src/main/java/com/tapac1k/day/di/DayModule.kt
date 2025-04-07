@@ -6,10 +6,12 @@ import com.tapac1k.day.data.usecase.GetDayListByRangeUseCaseImpl
 import com.tapac1k.day.data.usecase.GetCurrentDayIdIdUseCaseImpl
 import com.tapac1k.day.data.usecase.GetDayUseCaseImpl
 import com.tapac1k.day.data.usecase.SaveDayUseCaseImpl
+import com.tapac1k.day.data.usecase.SaveHabitUseCaseImpl
 import com.tapac1k.day.domain.service.DayService
 import com.tapac1k.day.domain.usecase.GetDayListByRangeUseCase
 import com.tapac1k.day.domain.usecase.GetDayUseCase
 import com.tapac1k.day.domain.usecase.SaveDayUseCase
+import com.tapac1k.day.domain.usecase.SaveHabitUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -37,4 +39,7 @@ interface DayUseCaseModule {
 
     @Binds
     fun bindGetDayListByRangeUseCase(impl: GetDayListByRangeUseCaseImpl): GetDayListByRangeUseCase
+
+    @Binds
+    fun bindSaveHabitUseCase(impl: SaveHabitUseCaseImpl): SaveHabitUseCase
 }

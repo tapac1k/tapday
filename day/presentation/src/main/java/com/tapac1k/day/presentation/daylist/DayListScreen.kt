@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -116,8 +117,8 @@ fun MainScreenPreview() {
             flowOf(
                 PagingData.from(
                     listOf(
-                        DayInfo(id = 42, dayActivity = DayActivity(), updated = 125),
-                        DayInfo(id = 32, dayActivity = DayActivity(), updated = 125)
+                        DayInfo(id = 42, dayActivity = DayActivity(), updated = 125, "Title"),
+                        DayInfo(id = 32, dayActivity = DayActivity(), updated = 125,"Title")
                     )
                 )
             ).collectAsLazyPagingItems()
@@ -133,8 +134,8 @@ fun MainScreenPreviewDark() {
             flowOf(
                 PagingData.from(
                     listOf(
-                        DayInfo(id = 42, dayActivity = DayActivity(), updated = 125),
-                        DayInfo(id = 32, dayActivity = DayActivity(), updated = 125)
+                        DayInfo(id = 42, dayActivity = DayActivity(), updated = 125,"Title"),
+                        DayInfo(id = 32, dayActivity = DayActivity(), updated = 125,"Title")
                     )
                 )
             ).collectAsLazyPagingItems()

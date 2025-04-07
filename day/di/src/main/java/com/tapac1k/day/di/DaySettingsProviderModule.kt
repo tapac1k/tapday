@@ -1,7 +1,7 @@
-package com.tapac1k.training.di
+package com.tapac1k.day.di
 
+import com.tapac1k.day.presentation.DaySettingsProvider
 import com.tapac1k.settings.contract_ui.SettingProvider
-import com.tapac1k.training.presentation.TrainingSettingsProvider
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -10,8 +10,10 @@ import dagger.multibindings.IntoSet
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface TrainingSettingsModule {
+interface DaySettingsProviderModule {
     @Binds
     @IntoSet
-    fun bindTrainingSettings(impl: TrainingSettingsProvider): SettingProvider
+    fun bindDaySettingsProvider(
+        daySettingsProvider: DaySettingsProvider
+    ): SettingProvider
 }

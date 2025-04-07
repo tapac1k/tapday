@@ -27,9 +27,6 @@ class TrainingListPagingSource(
     }
 
     override fun getRefreshKey(state: PagingState<Pair<Long, String>, ShortTrainingInfo>): Pair<Long, String>? {
-        return state.anchorPosition?.let { anchorPosition ->
-            val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.data?.first()?.let { it.date to it.id }
-        }
+        return null
     }
 }

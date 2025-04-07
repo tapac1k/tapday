@@ -60,7 +60,7 @@ fun TagDialogScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TagDialogScreenContent(
+private fun TagDialogScreenContent(
     text: String = "",
     onTextChanged: (String) -> Unit = {},
     onSave: () -> Unit = {},
@@ -93,7 +93,7 @@ fun TagDialogScreenContent(
 }
 
 @Composable
-fun TagDialogScreenPreview() {
+private fun TagDialogScreenPreview() {
     TapMyDayTheme {
         Surface(Modifier.fillMaxSize()) {
             TagDialogScreenContent()
@@ -103,13 +103,13 @@ fun TagDialogScreenPreview() {
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun TagDialogScreenPreviewLight() {
+private fun TagDialogScreenPreviewLight() {
     TagDialogScreenPreview()
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun TagDialogScreenPreviewDark() {
+private fun TagDialogScreenPreviewDark() {
     TagDialogScreenPreview()
 }
 

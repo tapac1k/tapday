@@ -31,7 +31,7 @@ dependencies {
     implementation(project(":training:contract"))
     implementation(project(":training:domain"))
 
-    implementation(project(":main:contract-ui"))
+    implementation(project(":settings:contract-ui"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

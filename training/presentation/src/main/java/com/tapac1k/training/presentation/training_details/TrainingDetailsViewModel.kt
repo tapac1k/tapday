@@ -29,10 +29,9 @@ class TrainingDetailsViewModel @Inject constructor(
     private val saveRequests = MutableSharedFlow<Unit>()
     var id = stateHandle.toRoute<TrainingDetailsRoute>().id
     var updated = false
-    var generateId = 0
+    var generateId = 0L
         get() {
-            field++
-            return field
+            return System.currentTimeMillis()
         }
 
     init {
@@ -41,7 +40,7 @@ class TrainingDetailsViewModel @Inject constructor(
             saveRequests.collectLatest {
                 if (!updated) return@collectLatest
                 GlobalScope.launch {
-                    saveTrainingUseCase.invoke(id, state.value.exercises, System.currentTimeMillis(), "").onSuccess {
+                    saveTrainingUseCase.invoke(id, state.value.exercises, state.value.date, "").onSuccess {
                         id = it
                     }
                 }.join()

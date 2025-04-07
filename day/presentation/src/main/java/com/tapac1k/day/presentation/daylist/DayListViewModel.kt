@@ -18,7 +18,7 @@ class DayListViewModel @Inject constructor(
     private val getCurrentDayIdUseCase: GetCurrentDayIdUseCase,
     private val getDayListByRangeUseCase: GetDayListByRangeUseCase,
 ) : ViewModel() {
-    private val day = getCurrentDayIdUseCase.invoke()
+    private val day get() = getCurrentDayIdUseCase.invoke()
     val dayFlow: Flow<PagingData<DayInfo>> = Pager(
         // Configure how data is loaded by passing additional properties to
         // PagingConfig, such as prefetchDistance.

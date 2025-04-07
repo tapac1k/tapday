@@ -1,4 +1,4 @@
-package com.tapac1k.main.contract_ui
+package com.tapac1k.settings.contract_ui
 
 interface SettingProvider {
     fun title(): String

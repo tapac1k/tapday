@@ -10,7 +10,11 @@ import javax.inject.Inject
 class SaveDayUseCaseImpl @Inject constructor(
     private val service: DayService
 ) : SaveDayUseCase {
-    override suspend fun invoke(day: Long, dayActivity: DayActivity): Result<Unit> = withContext(Dispatchers.IO) {
-        service.saveDayActivity(day, dayActivity)
+    override suspend fun invoke(
+        day: Long,
+        dayActivity: DayActivity,
+        description: String,
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        service.saveDayActivity(day, dayActivity, description)
     }
 }

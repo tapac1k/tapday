@@ -4,6 +4,7 @@ data class DayInfo(
     val id: Long,
     val dayActivity: DayActivity,
     val updated: Long?,
+    val description: String,
 )
 
 fun DayInfo.getWeek() = DayUtil.getDayOfWeek(id)

@@ -2,10 +2,13 @@ package com.tapac1k.day.domain.service
 
 import com.tapac1k.day.contract.DayActivity
 import com.tapac1k.day.contract.DayInfo
+import com.tapac1k.day.domain.models.Habit
 
 interface DayService {
     fun getCurrentDay(): Long
-    suspend fun saveDayActivity(day: Long, dayActivity: DayActivity): Result<Unit>
+    suspend fun saveDayActivity(day: Long, dayActivity: DayActivity, description: String): Result<Unit>
     suspend fun getDayInfo(day: Long): Result<DayInfo>
     suspend fun requestDayList(from: Long, to: Long): Result<List<DayInfo>>
+
+    suspend fun saveHabit(habit: Habit): Result<Unit> // if habit.id == -1L, create new habit
 }

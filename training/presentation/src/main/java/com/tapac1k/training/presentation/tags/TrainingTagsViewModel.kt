@@ -1,5 +1,6 @@
 package com.tapac1k.training.presentation.tags
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import com.tapac1k.compose.ViewModelWithUpdater
 import com.tapac1k.training.domain.usecase.GetTrainingTagsUseCase

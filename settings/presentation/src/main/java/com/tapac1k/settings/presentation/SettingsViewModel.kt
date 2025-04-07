@@ -2,9 +2,8 @@ package com.tapac1k.settings.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tapac1k.auth.contract.LogoutUseCase
-import com.tapac1k.main.contract_ui.SettingProvider
+import com.tapac1k.settings.contract_ui.SettingProvider
 import com.tapac1k.training.contract.SyncDatabaseWithFirebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

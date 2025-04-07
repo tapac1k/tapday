@@ -31,6 +31,8 @@ dependencies {
     implementation(project(":day:contract"))
     implementation(project(":day:domain"))
 
+    implementation(project(":settings:contract-ui"))
+
     implementation(project(":utils:compose"))
     implementation(libs.androidx.lifecycle.extensions)
     implementation(libs.androidx.paging.runtime.ktx)
