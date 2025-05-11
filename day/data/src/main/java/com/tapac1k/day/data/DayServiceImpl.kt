@@ -4,11 +4,14 @@ import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.snapshots
 import com.tapac1k.day.contract.DayActivity
 import com.tapac1k.day.contract.DayInfo
 import com.tapac1k.day.domain.models.Habit
 import com.tapac1k.day.domain.service.DayService
 import com.tapac1k.utils.common.resultOf
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import readDayInfo
 import javax.inject.Inject
@@ -84,6 +87,21 @@ class DayServiceImpl @Inject constructor(
             .set(fields)
             .await()
         Unit
+    }
+
+    override suspend fun subscribeAllHabits(): Flow<List<Habit>> {
+        return db.collection("users")
+            .document(currentUserId!!)
+            .collection(HABITS_PATH)
+            .snapshots().map {
+                it.documents.mapNotNull {
+                    Habit(
+                        id = it.id,
+                        name = it.getString("name") ?: return@mapNotNull null,
+                        isPositive = it.getBoolean("isPositive") ?: return@mapNotNull null
+                    )
+                }
+            }
     }
 
     private suspend fun isHabitExist(name: String, excludeId: String? = null): Boolean {

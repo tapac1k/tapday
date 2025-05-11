@@ -3,7 +3,6 @@ package com.tapac1k.training.presentation.exercise
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,14 +24,12 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -50,7 +47,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tapac1k.compose.theme.TapMyDayTheme
 import com.tapac1k.compose.widgets.TopBar
 import com.tapac1k.training.contract.TrainingTag
-import com.tapac1k.training.presentation.tag.TrainingTagEvent
 import com.tapac1k.utils.common.WithBackNavigation
 import kotlinx.coroutines.flow.collectLatest
 
@@ -76,7 +72,7 @@ fun ExerciseDetailsScreen(
     ExerciseDetailsScreenContent(
         state,
         navigation::onBack,
-        viewModel::updateState,
+        viewModel::requestUpdateState,
         viewModel::saveExercise,
     )
 }

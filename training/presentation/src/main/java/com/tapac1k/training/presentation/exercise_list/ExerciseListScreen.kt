@@ -46,7 +46,7 @@ fun ExerciseListScreen(
         onExerciseClick = { navigation.openExerciseDetails(it.id) },
         onAddExerciseClick = navigation::openCreateExercise,
         onBack = navigation::onBack,
-        updater = viewModel::updateState
+        updater = viewModel::requestUpdateState
     )
 }
 
@@ -60,12 +60,12 @@ fun ExerciseSelectionScreen(
     ExerciseListScreenContent(
         state = state,
         onExerciseClick = {
-            trainingDetailsViewModel.updateState(TrainingDetailsUpdater.AddExercise(it))
+            trainingDetailsViewModel.requestUpdateState(TrainingDetailsUpdater.AddExercise(it))
             navigation.onBack()
         },
         onAddExerciseClick = navigation::openCreateExercise,
         onBack = navigation::onBack,
-        updater = viewModel::updateState
+        updater = viewModel::requestUpdateState
     )
 }
 

@@ -59,7 +59,7 @@ fun HabitDialogScreen(
     ModalBottomSheet(onDismissRequest = navigation::onBack) {
         HabitDialogScreenContent(
             state = state,
-            updater = viewModel::updateState,
+            updater = viewModel::requestUpdateState,
             onSave = viewModel::saveHabit,
         )
     }

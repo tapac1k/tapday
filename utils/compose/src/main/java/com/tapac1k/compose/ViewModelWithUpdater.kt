@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class ViewModelWithUpdater<State, Event, Updater>(
     private val initialState: State
@@ -29,8 +29,16 @@ abstract class ViewModelWithUpdater<State, Event, Updater>(
         }
     }
 
-    fun updateState(update: Updater) = viewModelScope.launch(Dispatchers.Default) {
+    fun requestUpdateState(update: Updater) = viewModelScope.launch(Dispatchers.Default) {
         _updaters.emit(update)
+    }
+
+    protected fun updateState(
+        update: State.() -> State
+    ) = viewModelScope.launch(Dispatchers.Default) {
+        _state.update {
+            update(it)
+        }
     }
 
     protected fun launch(

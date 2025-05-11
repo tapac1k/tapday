@@ -30,7 +30,7 @@ fun TrainingTagsScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     TrainingTagsScreenContent(
         state = state,
-        updater = viewModel::updateState,
+        updater = viewModel::requestUpdateState,
         navigation = navigation
     )
 }

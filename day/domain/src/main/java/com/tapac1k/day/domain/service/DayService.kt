@@ -3,6 +3,7 @@ package com.tapac1k.day.domain.service
 import com.tapac1k.day.contract.DayActivity
 import com.tapac1k.day.contract.DayInfo
 import com.tapac1k.day.domain.models.Habit
+import kotlinx.coroutines.flow.Flow
 
 interface DayService {
     fun getCurrentDay(): Long
@@ -11,4 +12,5 @@ interface DayService {
     suspend fun requestDayList(from: Long, to: Long): Result<List<DayInfo>>
 
     suspend fun saveHabit(habit: Habit): Result<Unit> // if habit.id == -1L, create new habit
+    suspend fun subscribeAllHabits(): Flow<List<Habit>>
 }

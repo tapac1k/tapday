@@ -3,9 +3,11 @@ package com.tapac1k.compose.widgets
 import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -23,9 +25,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,11 +52,14 @@ fun TopBarWithSearch(
     onBack: (() -> Unit)? = {},
     content: @Composable RowScope.() -> Unit = {},
 ) {
-    Column(modifier) {
+    var heightPx by remember { mutableStateOf(0) }
+    Box(modifier.background(Color.Transparent)) {
         TopBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .zIndex(12f)
+                .background(Color.Transparent)
+                .onGloballyPositioned { heightPx = it.size.height }
         ) {
             if (onBack != null) {
                 IconButton(onClick = { onBack() }) {
@@ -65,7 +76,6 @@ fun TopBarWithSearch(
             }
         }
 
-        Surface(modifier = Modifier.offset(y = -24.dp)) {
             Column(
                 Modifier
                     .fillMaxWidth()
@@ -74,7 +84,7 @@ fun TopBarWithSearch(
                         MaterialTheme.colorScheme.surfaceVariant,
                         shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
                     )
-                    .padding(top = 24.dp)
+                    .padding(top = LocalDensity.current.run { heightPx.toDp() })
                     .zIndex(1f),
             ) {
                 if (query != null) {
@@ -103,7 +113,7 @@ fun TopBarWithSearch(
                 }
 
             }
-        }
+
 
 
     }
