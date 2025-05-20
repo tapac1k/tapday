@@ -7,13 +7,17 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.snapshots
 import com.tapac1k.day.contract.DayActivity
 import com.tapac1k.day.contract.DayInfo
+import com.tapac1k.day.domain.models.FullDayInfo
 import com.tapac1k.day.domain.models.Habit
+import com.tapac1k.day.domain.models.HabitData
 import com.tapac1k.day.domain.service.DayService
 import com.tapac1k.utils.common.resultOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import readDayInfo
+import readHabit
+import readHabitData
 import javax.inject.Inject
 
 class DayServiceImpl @Inject constructor(
@@ -25,8 +29,15 @@ class DayServiceImpl @Inject constructor(
         return System.currentTimeMillis() / 1000 / 60 / 60 / 24
     }
 
-    override suspend fun saveDayActivity(day: Long, dayActivity: DayActivity, description: String): Result<Unit> = resultOf {
+    override suspend fun saveDayActivity(
+        day: Long,
+        dayActivity: DayActivity,
+        description: String,
+        habitData: List<HabitData>
+    ): Result<Unit> = resultOf {
         val user = Firebase.auth.currentUser!!
+        val positiveSum = habitData.sumOf { if (it.habit.isPositive) it.state else 0 }
+        val negativeSum = habitData.sumOf { if (!it.habit.isPositive) it.state else 0 }
         val fields = mapOf(
             "updated" to Timestamp.now(),
             "id" to day,
@@ -34,22 +45,57 @@ class DayServiceImpl @Inject constructor(
             "mood" to dayActivity.mood,
             "state" to dayActivity.state,
             "sleepHours" to dayActivity.sleepHours,
+            "positiveSum" to positiveSum,
+            "negativeSum" to negativeSum,
         )
         val dayFirestore = db.collection("users").document(user.uid).collection(DAYS_PATH).document(day.toString())
         dayFirestore
             .set(fields)
             .await()
 
+        val habitsCollection = dayFirestore.collection(HABITS_PATH)
+        val existing = habitsCollection.get().await()
+        for (doc in existing.documents) {
+            doc.reference.delete()
+        }
+        for (habit in habitData) {
+            habitsCollection.document(habit.habit.id).set(
+                mapOf(
+                    "id" to habit.habit.id,
+                    "state" to habit.state
+                )
+            ).await()
+        }
     }
 
-    override suspend fun getDayInfo(day: Long): Result<DayInfo> = resultOf {
-        return@resultOf db.collection("users")
-            .document(currentUserId!!)
-            .collection(DAYS_PATH)
-            .document(day.toString())
-            .get()
-            .await()
-            .readDayInfo()
+    override suspend fun getDayInfo(day: Long): Result<FullDayInfo> = resultOf {
+        val userRef = db.collection("users").document(currentUserId!!)
+        val dayDocRef = userRef.collection(DAYS_PATH).document(day.toString())
+
+        val daySnapshot = dayDocRef.get().await()
+        val dayInfo = daySnapshot.readDayInfo()
+
+        val allHabits = userRef.collection(HABITS_PATH).get().await()
+            .mapNotNull { it.readHabit() }
+            .associateBy { it.id }
+
+        val habitsSnapshot = dayDocRef.collection(HABITS_PATH).get().await()
+        val habitDataList = habitsSnapshot.documents.mapNotNull { doc ->
+            val habitId = doc.getString("id") ?: return@mapNotNull null
+            val state = doc.getLong("state")?.toInt() ?: return@mapNotNull null
+            val habit = allHabits[habitId] ?: return@mapNotNull null
+            HabitData(habit, state)
+        }
+
+        FullDayInfo(
+            id = day,
+            dayActivity = dayInfo.dayActivity,
+            updated = dayInfo.updated,
+            description = dayInfo.description,
+            positiveSum = dayInfo.positiveSum,
+            negativeSum = dayInfo.negativeSum,
+            habitsData = habitDataList
+        )
     }
 
 
@@ -95,11 +141,7 @@ class DayServiceImpl @Inject constructor(
             .collection(HABITS_PATH)
             .snapshots().map {
                 it.documents.mapNotNull {
-                    Habit(
-                        id = it.id,
-                        name = it.getString("name") ?: return@mapNotNull null,
-                        isPositive = it.getBoolean("isPositive") ?: return@mapNotNull null
-                    )
+                    it.readHabit()
                 }
             }
     }
@@ -121,7 +163,7 @@ class DayServiceImpl @Inject constructor(
 
     private fun buildDayList(from: Long, to: Long, map: Map<Long, DayInfo>): List<DayInfo> {
         return (to..from).reversed().map {
-            map[it] ?: DayInfo(it, DayActivity(), null, "")
+            map[it] ?: DayInfo(it, DayActivity(), null, "", 0, 0)
         }
     }
 

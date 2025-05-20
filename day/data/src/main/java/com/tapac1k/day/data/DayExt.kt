@@ -14,16 +14,18 @@ fun DocumentSnapshot.readDayInfo(): DayInfo {
             state = getLong("state")?.toInt() ?: 0
         ),
         updated = getTimestamp("updated")?.seconds ?: 0L,
-        description = getString("description").orEmpty()
+        description = getString("description").orEmpty(),
+        positiveSum = getLong("positiveSum")?.toInt() ?: 0,
+        negativeSum = getLong("negativeSum")?.toInt() ?: 0,
     )
 }
 
 
-fun DocumentSnapshot.readHabit(): Habit {
+fun DocumentSnapshot.readHabit(): Habit? {
     return Habit(
         id = id,
-        name = getString("name").orEmpty(),
-        isPositive = getBoolean("isPositive") ?: true,
+        name = getString("name") ?: return null,
+        isPositive = getBoolean("isPositive") ?: return null
     )
 }
 

@@ -1,6 +1,7 @@
 package com.tapac1k.day.data.usecase
 
 import com.tapac1k.day.contract.DayActivity
+import com.tapac1k.day.domain.models.HabitData
 import com.tapac1k.day.domain.service.DayService
 import com.tapac1k.day.domain.usecase.SaveDayUseCase
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,8 @@ class SaveDayUseCaseImpl @Inject constructor(
         day: Long,
         dayActivity: DayActivity,
         description: String,
+        habitsData: List<HabitData>,
     ): Result<Unit> = withContext(Dispatchers.IO) {
-        service.saveDayActivity(day, dayActivity, description)
+        service.saveDayActivity(day, dayActivity, description, habitsData)
     }
 }

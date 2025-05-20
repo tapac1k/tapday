@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.tapac1k.compose.ViewModelWithUpdater
 import com.tapac1k.day.contract_ui.DayRoute
+import com.tapac1k.day.domain.models.Habit
+import com.tapac1k.day.domain.models.HabitData
 import com.tapac1k.day.domain.usecase.GetDayUseCase
 import com.tapac1k.day.domain.usecase.SaveDayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -66,6 +68,22 @@ class DayViewModel @Inject constructor(
                     it.copy(description = updater.desc)
                 }
             }
+
+            is StateUpdate.ToggleHabitState -> toggleHabitState(updater.habit)
+        }
+    }
+
+    private fun toggleHabitState(
+        habit: Habit,
+    ) {
+        _state.update {
+            val currentValue = it.habitsData[habit] ?: 0
+            val newValue = if (currentValue == 3) 0 else currentValue + 1
+            it.copy(
+                habitsData = it.habitsData.toMutableMap().apply {
+                    this[habit] = newValue
+                }
+            )
         }
     }
 
@@ -73,7 +91,17 @@ class DayViewModel @Inject constructor(
         if (updated) {
             GlobalScope.launch {
                 _state.value.let {
-                    saveDayUseCase.invoke(day = day.day, dayActivity = it.dayActivity, description = it.description.text)
+                    saveDayUseCase.invoke(
+                        day = day.day,
+                        dayActivity = it.dayActivity,
+                        description = it.description.text,
+                        habitsData = it.habitsData.entries.map {
+                            HabitData(
+                                habit = it.key,
+                                state = it.value
+                            )
+                        }.filter { it.state > 0 },
+                    )
                 }
             }
         }
