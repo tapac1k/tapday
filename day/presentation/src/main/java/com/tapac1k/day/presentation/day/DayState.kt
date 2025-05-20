@@ -10,4 +10,9 @@ data class DayState(
     val description: TextFieldValue = TextFieldValue(""),
     val habitsData: Map<Habit, Int> = emptyMap(),
     val loading: Boolean = true,
-)
+) {
+    val habits = habitsData.entries.map { (HabitData(it.key, it.value)) }
+
+    val positive = habits.filter { it.habit.isPositive }
+    val negative = habits.filter { !it.habit.isPositive }
+}

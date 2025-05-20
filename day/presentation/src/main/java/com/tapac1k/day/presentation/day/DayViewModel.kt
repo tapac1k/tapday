@@ -10,9 +10,11 @@ import com.tapac1k.day.domain.models.Habit
 import com.tapac1k.day.domain.models.HabitData
 import com.tapac1k.day.domain.usecase.GetDayUseCase
 import com.tapac1k.day.domain.usecase.SaveDayUseCase
+import com.tapac1k.day.domain.usecase.SubscribeHabitsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,6 +24,7 @@ class DayViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
     private val saveDayUseCase: SaveDayUseCase,
     private val getDayUseCase: GetDayUseCase,
+    private val getHabitsUseCase: SubscribeHabitsUseCase,
 ) : ViewModelWithUpdater<DayState, DayEvent, StateUpdate>(DayState()) {
 
     private var updated = false
@@ -29,12 +32,27 @@ class DayViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
+            getHabitsUseCase.invoke().first().let {  habits ->
+                _state.update {
+                    it.copy(
+                        habitsData = habits.associate { habit ->
+                            habit to 0
+                        },
+                        loading = false,
+                    )
+                }
+            }
             getDayUseCase.invoke(day.day).onSuccess { result ->
                 _state.update {
                     it.copy(
                         dayActivity = result.dayActivity,
                         description = TextFieldValue(result.description),
                         loading = false,
+                        habitsData = it.habitsData.toMutableMap().apply {
+                            result.habitsData.forEach { habitData ->
+                                this[habitData.habit] = habitData.state
+                            }
+                        }
                     )
                 }
             }
