@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -108,12 +109,14 @@ fun CircularSlider(
     onProgressChange: (Float) -> Unit = {},
     ringColor: Color = Color.Red,
     strokeWidth: Dp = 20.dp,
+    clickableArea: Dp = 30.dp,
     startAngle: Float = -90f
 ) {
     var touched by remember { mutableStateOf(false) }
     var animate by remember { mutableStateOf(true) }
     var center by remember { mutableStateOf(Offset.Zero) }
     var radius by remember { mutableStateOf(0f) }
+    val clickableAreaPx = with(receiver = LocalDensity.current) { clickableArea.toPx() }
     val currentProgress = if (!animate) {
         progress
     } else {
@@ -138,7 +141,7 @@ fun CircularSlider(
                         val distance = sqrt(
                             (it.x - center.x).pow(2) + (it.y - center.y).pow(2)
                         )
-                        touched = distance < radius + strokeWidth.value
+                        touched = distance <= radius + clickableAreaPx / 2.0f && distance >= radius - clickableAreaPx / 2.0f
                         if (touched) {
                             animate = true
                             onProgressChange(getProgress(center, Offset(it.x, it.y)))

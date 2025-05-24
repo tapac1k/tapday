@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -27,7 +28,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -48,7 +48,7 @@ import com.tapac1k.compose.LifecycleEffect
 import com.tapac1k.compose.theme.TapMyDayTheme
 import com.tapac1k.compose.widgets.TopBar
 import com.tapac1k.day.contract_ui.DayNavigation
-import com.tapac1k.day.domain.models.Habit
+import com.tapac1k.day.domain.models.HabitData
 import com.tapac1k.day.presentation.widget.ActivityRings
 import com.tapac1k.day.presentation.widget.ActivityView
 
@@ -68,6 +68,7 @@ fun DayScreen(
     DayScreenContent(
         state,
         stateUpdater = viewModel::requestUpdateState,
+        onCreateHabit = dayNavigation::onCreateHabit,
         onBack = dayNavigation::onBack,
     )
 }
@@ -76,12 +77,13 @@ fun DayScreen(
 fun DayScreenContent(
     dayState: DayState = DayState(),
     stateUpdater: (StateUpdate) -> Unit = {},
+    onCreateHabit: (Boolean) -> Unit = {},
     onBack: () -> Unit = {},
 ) {
     var editActivity by rememberSaveable { mutableStateOf(false) }
     val collapsedPositiveHabits = rememberSaveable { mutableStateOf(true) }
     val collapsedNegativeHabits = rememberSaveable { mutableStateOf(true) }
-    var collapsedDescription by rememberSaveable { mutableStateOf(false) }
+    val collapsedDescription = rememberSaveable { mutableStateOf(false) }
     Scaffold(
         Modifier
             .fillMaxSize()
@@ -111,27 +113,17 @@ fun DayScreenContent(
                         onStateUpdate = { stateUpdater(StateUpdate.UpdateState(it)) },
                         onSleepUpdate = { stateUpdater(StateUpdate.UpdateSleepHours(it)) },
                         modifier = Modifier
-                            .animateItem(placementSpec = null)
+                            .animateItem()
                     )
                 }
 
             }
             item("Description") {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        "Description", modifier = Modifier
-                            .padding(16.dp)
-                            .weight(1f), style = MaterialTheme.typography.headlineSmall
-                    )
-                    CollapseIcon(collapsedDescription, onClick = {
-                        collapsedDescription = !collapsedDescription
-                    })
-                }
-                HorizontalDivider()
-                if (!collapsedDescription) {
+                SectionTitle("Description", collapsedDescription, modifier = Modifier.animateItem())
+                if (!collapsedDescription.value) {
                     DescriptionText(
                         dayState.description, Modifier
-                            .animateItem(placementSpec = null)
+                            .animateItem()
                             .padding(horizontal = 16.dp)
                     ) {
                         stateUpdater(StateUpdate.UpdateDescription(it))
@@ -139,105 +131,83 @@ fun DayScreenContent(
                 }
             }
             item("Good habits") {
-                HabitTitle("Good habits", collapsedPositiveHabits) {
-                    stateUpdater(StateUpdate.AddHabit(Habit("", "", true)))
+                SectionTitle("Good habits", collapsedPositiveHabits, modifier = Modifier.animateItem()) {
+                   onCreateHabit(true)
                 }
             }
-            if (!collapsedPositiveHabits) {
+            if (!collapsedPositiveHabits.value) {
                 items(dayState.positive.size, { dayState.positive[it].habit.id }) { index ->
                     val habit = dayState.positive[index]
-                    Row(
-                        Modifier
-                            .animateItem()
-                            .clickable { stateUpdater.invoke(StateUpdate.ToggleHabitState(habit.habit)) }) {
-                        Text(
-                            habit.habit.name.capitalize(Locale.current),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                        )
-                        for (i in 0 until habit.state) {
-                            Icon(
-                                Icons.Rounded.Check,
-                                "",
-                                modifier = Modifier.padding(4.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-
+                    HabitState(habit) { stateUpdater.invoke(StateUpdate.ToggleHabitState(habit.habit))}
                 }
             }
 
             item("Bad habits") {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        "Bad habits", modifier = Modifier
-                            .padding(16.dp)
-                            .weight(1f), style = MaterialTheme.typography.headlineSmall
-                    )
-                    IconButton(onClick = { /* TODO */ }) {
-                        Icon(Icons.Rounded.Add, "")
-                    }
-                    CollapseIcon(collapsedNegativeHabits, onClick = {
-                        collapsedNegativeHabits = !collapsedNegativeHabits
-                    })
-
+                SectionTitle("Bad habits", collapsedNegativeHabits, modifier = Modifier.animateItem()) {
+                    onCreateHabit(false)
                 }
-                HorizontalDivider()
             }
-            if (!collapsedNegativeHabits) {
+            if (!collapsedNegativeHabits.value) {
                 items(dayState.negative.size, { dayState.negative[it].habit.id }) { index ->
                     val habit = dayState.negative[index]
-                    Row(
-                        Modifier
-                            .animateItem()
-                            .clickable { stateUpdater.invoke(StateUpdate.ToggleHabitState(habit.habit)) }) {
-                        Text(
-                            habit.habit.name.capitalize(Locale.current),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                        )
-                        for (i in 0 until habit.state) {
-                            Icon(
-                                Icons.Rounded.Check,
-                                "",
-                                modifier = Modifier.padding(4.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
+                    HabitState(habit) { stateUpdater.invoke(StateUpdate.ToggleHabitState(habit.habit))}
                 }
             }
-
         }
     }
 }
 
 @Composable
-private fun HabitTitle(
+private fun LazyItemScope.HabitState(
+    habit: HabitData,
+    onClick: () -> Unit
+) {
+    Row(
+        Modifier
+            .animateItem()
+            .clickable { onClick()}) {
+        Text(
+            habit.habit.name.capitalize(Locale.current),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+        )
+        for (i in 0 until habit.state) {
+            Icon(
+                Icons.Rounded.Check,
+                "",
+                modifier = Modifier.padding(4.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}
+
+@Composable
+private fun SectionTitle(
     title: String,
     collapsedState: MutableState<Boolean>,
-    onPlusClick: () -> Unit = {},
+    modifier: Modifier = Modifier,
+    onPlusClick: (() -> Unit)? = null,
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
         Text(
             title
             , modifier = Modifier
                 .padding(16.dp)
                 .weight(1f), style = MaterialTheme.typography.headlineSmall
         )
-        IconButton(onClick = { onPlusClick() }) {
-            Icon(Icons.Rounded.Add, "")
+        if (onPlusClick != null) {
+            IconButton(onClick = { onPlusClick() }) {
+                Icon(Icons.Rounded.Add, "")
+            }
         }
         CollapseIcon(collapsedState.value, onClick = {
             collapsedState.value = !collapsedState.value
         })
     }
-    HorizontalDivider()
+    HorizontalDivider(modifier = modifier)
 }
 
 @Composable
@@ -246,7 +216,7 @@ private fun CollapseIcon(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
-    IconButton(onClick = onClick) {
+    IconButton(onClick = onClick, modifier = modifier) {
         Icon(if (collapsed) Icons.Rounded.KeyboardArrowRight else Icons.Rounded.KeyboardArrowDown, "")
     }
 }

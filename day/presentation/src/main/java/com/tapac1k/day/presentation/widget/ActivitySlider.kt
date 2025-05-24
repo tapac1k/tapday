@@ -73,6 +73,7 @@ fun ActivityRings(
                     .fillMaxWidth()
                     .aspectRatio(1f),
                 strokeWidth = 20.dp,
+                clickableArea = 25.dp,
                 progress = sleepProgresss,
                 onProgressChange = {
                     onSleepUpdate(it * 16)
@@ -85,6 +86,7 @@ fun ActivityRings(
                     .fillMaxWidth()
                     .aspectRatio(1f),
                 strokeWidth = 20.dp,
+                clickableArea = 25.dp,
                 progress = stateProgress,
                 onProgressChange = {
                     onStateUpdate((it * 100).roundToInt())
@@ -97,6 +99,7 @@ fun ActivityRings(
                     .fillMaxWidth()
                     .aspectRatio(1f),
                 strokeWidth = 20.dp,
+                clickableArea = 25.dp,
                 progress = moodProgress,
                 onProgressChange = {
                     onMoodUpdate((it * 100).roundToInt())

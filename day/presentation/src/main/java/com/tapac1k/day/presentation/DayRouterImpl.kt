@@ -36,7 +36,7 @@ class DayRouterImpl @Inject constructor() : DayRouter {
             DayScreen(hiltViewModel(), object : DayNavigation, WithBackNavigation by defaultBackController {
                 override fun onCreateHabit(isGood: Boolean) {
                     navController.safeNavigate(
-                        DayListRoute::class, EditHabitRoute(
+                        DayRoute::class, EditHabitRoute(
                             isPositive = isGood
                         )
                     )
