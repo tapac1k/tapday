@@ -33,22 +33,32 @@ class DayRouterImpl @Inject constructor() : DayRouter {
             })
         }
         composable<DayRoute> {
-            DayScreen(hiltViewModel(), object : DayNavigation, WithBackNavigation by defaultBackController {})
+            DayScreen(hiltViewModel(), object : DayNavigation, WithBackNavigation by defaultBackController {
+                override fun onCreateHabit(isGood: Boolean) {
+                    navController.safeNavigate(
+                        DayListRoute::class, EditHabitRoute(
+                            isPositive = isGood
+                        )
+                    )
+                }
+            })
         }
         composable<HabitListRoute> {
             HabitListScreen(
                 hiltViewModel(),
-                object : HabitListNavigation, WithBackNavigation by defaultBackController  {
+                object : HabitListNavigation, WithBackNavigation by defaultBackController {
                     override fun creteHabit() {
                         navController.safeNavigate(HabitListRoute::class, EditHabitRoute())
                     }
 
                     override fun editHabit(habit: Habit) {
-                        navController.safeNavigate(HabitListRoute::class, EditHabitRoute(
-                            habitId = habit.id,
-                            habitName = habit.name,
-                            isPositive = habit.isPositive,
-                        ))
+                        navController.safeNavigate(
+                            HabitListRoute::class, EditHabitRoute(
+                                habitId = habit.id,
+                                habitName = habit.name,
+                                isPositive = habit.isPositive,
+                            )
+                        )
                     }
                 },
             )

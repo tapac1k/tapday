@@ -132,7 +132,7 @@ class DayServiceImpl @Inject constructor(
         db.collection("users").document(user.uid).collection(HABITS_PATH).document(habitId)
             .set(fields)
             .await()
-        Unit
+        habitId
     }
 
     override suspend fun subscribeAllHabits(): Flow<List<Habit>> {

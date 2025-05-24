@@ -30,9 +30,9 @@ class DayListPagingSource(
     }
 
     override fun getRefreshKey(state: PagingState<Long, DayInfo>): Long? {
-        return state.anchorPosition?.let { anchorPosition ->
-            val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.data?.first()?.id
-        }
+        val anchorPosition = state.anchorPosition ?: return null
+        val closestItem = state.closestItemToPosition(anchorPosition) ?: return null
+        val anchorDay = closestItem.id
+        return (anchorDay + state.config.pageSize / 2).coerceAtMost(currentDay)
     }
 }

@@ -1,11 +1,6 @@
 package com.tapac1k.day.presentation.day
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +26,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,6 +48,7 @@ import com.tapac1k.compose.LifecycleEffect
 import com.tapac1k.compose.theme.TapMyDayTheme
 import com.tapac1k.compose.widgets.TopBar
 import com.tapac1k.day.contract_ui.DayNavigation
+import com.tapac1k.day.domain.models.Habit
 import com.tapac1k.day.presentation.widget.ActivityRings
 import com.tapac1k.day.presentation.widget.ActivityView
 
@@ -81,8 +79,8 @@ fun DayScreenContent(
     onBack: () -> Unit = {},
 ) {
     var editActivity by rememberSaveable { mutableStateOf(false) }
-    var collapsedPositiveHabits by rememberSaveable { mutableStateOf(true) }
-    var collapsedNegativeHabits by rememberSaveable { mutableStateOf(true) }
+    val collapsedPositiveHabits = rememberSaveable { mutableStateOf(true) }
+    val collapsedNegativeHabits = rememberSaveable { mutableStateOf(true) }
     var collapsedDescription by rememberSaveable { mutableStateOf(false) }
     Scaffold(
         Modifier
@@ -106,16 +104,14 @@ fun DayScreenContent(
                 .consumeWindowInsets(padding)
         ) {
             item("Rings") {
-                AnimatedVisibility(
-                    editActivity,
-                    enter = fadeIn() + expandVertically(),
-                    exit = fadeOut() + shrinkVertically()
-                ) {
+                if (editActivity) {
                     ActivityRings(
                         dayState.dayActivity,
                         onMoodUpdate = { stateUpdater(StateUpdate.UpdateMood(it)) },
                         onStateUpdate = { stateUpdater(StateUpdate.UpdateState(it)) },
                         onSleepUpdate = { stateUpdater(StateUpdate.UpdateSleepHours(it)) },
+                        modifier = Modifier
+                            .animateItem(placementSpec = null)
                     )
                 }
 
@@ -133,33 +129,27 @@ fun DayScreenContent(
                 }
                 HorizontalDivider()
                 if (!collapsedDescription) {
-                    DescriptionText(dayState.description, Modifier.animateItem().padding(horizontal = 16.dp)) {
+                    DescriptionText(
+                        dayState.description, Modifier
+                            .animateItem(placementSpec = null)
+                            .padding(horizontal = 16.dp)
+                    ) {
                         stateUpdater(StateUpdate.UpdateDescription(it))
                     }
                 }
             }
             item("Good habits") {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        "Good habits", modifier = Modifier
-                            .padding(16.dp)
-                            .weight(1f), style = MaterialTheme.typography.headlineSmall
-                    )
-                    IconButton(onClick = { /* TODO */ }) {
-                        Icon(Icons.Rounded.Add, "")
-                    }
-                    CollapseIcon(collapsedPositiveHabits, onClick = {
-                        collapsedPositiveHabits = !collapsedPositiveHabits
-                    })
+                HabitTitle("Good habits", collapsedPositiveHabits) {
+                    stateUpdater(StateUpdate.AddHabit(Habit("", "", true)))
                 }
-                HorizontalDivider()
             }
             if (!collapsedPositiveHabits) {
                 items(dayState.positive.size, { dayState.positive[it].habit.id }) { index ->
                     val habit = dayState.positive[index]
-                    Row(Modifier
-                        .animateItem()
-                        .clickable { stateUpdater.invoke(StateUpdate.ToggleHabitState(habit.habit)) }) {
+                    Row(
+                        Modifier
+                            .animateItem()
+                            .clickable { stateUpdater.invoke(StateUpdate.ToggleHabitState(habit.habit)) }) {
                         Text(
                             habit.habit.name.capitalize(Locale.current),
                             modifier = Modifier
@@ -200,9 +190,10 @@ fun DayScreenContent(
             if (!collapsedNegativeHabits) {
                 items(dayState.negative.size, { dayState.negative[it].habit.id }) { index ->
                     val habit = dayState.negative[index]
-                    Row(Modifier
-                        .animateItem()
-                        .clickable { stateUpdater.invoke(StateUpdate.ToggleHabitState(habit.habit)) }) {
+                    Row(
+                        Modifier
+                            .animateItem()
+                            .clickable { stateUpdater.invoke(StateUpdate.ToggleHabitState(habit.habit)) }) {
                         Text(
                             habit.habit.name.capitalize(Locale.current),
                             modifier = Modifier
@@ -224,6 +215,29 @@ fun DayScreenContent(
 
         }
     }
+}
+
+@Composable
+private fun HabitTitle(
+    title: String,
+    collapsedState: MutableState<Boolean>,
+    onPlusClick: () -> Unit = {},
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            title
+            , modifier = Modifier
+                .padding(16.dp)
+                .weight(1f), style = MaterialTheme.typography.headlineSmall
+        )
+        IconButton(onClick = { onPlusClick() }) {
+            Icon(Icons.Rounded.Add, "")
+        }
+        CollapseIcon(collapsedState.value, onClick = {
+            collapsedState.value = !collapsedState.value
+        })
+    }
+    HorizontalDivider()
 }
 
 @Composable

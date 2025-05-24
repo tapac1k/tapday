@@ -50,6 +50,7 @@ import kotlin.math.roundToInt
 @Composable
 fun ActivityRings(
     dayActivity: DayActivity,
+    modifier: Modifier = Modifier,
     onMoodUpdate: (Int) -> Unit,
     onStateUpdate: (Int) -> Unit,
     onSleepUpdate: (Float) -> Unit
@@ -58,7 +59,7 @@ fun ActivityRings(
     val sleepProgresss = dayActivity.sleepHours / 16f
     val stateProgress = dayActivity.state / 100f
     Box(
-        Modifier
+        modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {

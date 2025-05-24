@@ -60,6 +60,7 @@
             <option value="$PROJECT_DIR$/utils" />
             <option value="$PROJECT_DIR$/utils/common" />
             <option value="$PROJECT_DIR$/utils/compose" />
+            <option value="$PROJECT_DIR$/utils/database-day-mover" />
             <option value="$PROJECT_DIR$/utils/database-mover" />
             <option value="$PROJECT_DIR$/utils/firebase-helper" />
           </set>

@@ -32,6 +32,7 @@ dependencies {
     implementation(project(":settings:domain"))
 
     implementation(project(":training:contract"))
+    implementation(project(":day:data"))
     implementation(project(":main:contract-ui"))
     implementation(project(":auth:contract"))
 

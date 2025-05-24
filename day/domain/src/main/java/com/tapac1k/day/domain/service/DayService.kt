@@ -19,6 +19,6 @@ interface DayService {
     suspend fun getDayInfo(day: Long): Result<FullDayInfo>
     suspend fun requestDayList(from: Long, to: Long): Result<List<DayInfo>>
 
-    suspend fun saveHabit(habit: Habit): Result<Unit> // if habit.id == -1L, create new habit
+    suspend fun saveHabit(habit: Habit): Result<String> // if habit.id == -1L, create new habit
     suspend fun subscribeAllHabits(): Flow<List<Habit>>
 }

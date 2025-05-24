@@ -9,6 +9,6 @@ class SaveHabitUseCaseImpl @Inject constructor(
     private val dayService: DayService,
 ) : SaveHabitUseCase {
     override suspend fun invoke(habit: Habit): Result<Unit> {
-        return dayService.saveHabit(habit)
+        return dayService.saveHabit(habit).map {  }
     }
 }

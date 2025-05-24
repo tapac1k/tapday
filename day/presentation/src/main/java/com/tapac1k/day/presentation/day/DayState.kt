@@ -13,6 +13,6 @@ data class DayState(
 ) {
     val habits = habitsData.entries.map { (HabitData(it.key, it.value)) }
 
-    val positive = habits.filter { it.habit.isPositive }
-    val negative = habits.filter { !it.habit.isPositive }
+    val positive = habits.filter { it.habit.isPositive }.sortedBy { it.habit.name }
+    val negative = habits.filter { !it.habit.isPositive }.sortedBy { it.habit.name }
 }

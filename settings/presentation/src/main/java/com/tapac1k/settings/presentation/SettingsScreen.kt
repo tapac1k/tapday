@@ -55,9 +55,6 @@ fun SettingsScreen(
     SettingsScreenContent(
         settingsNavigation = settingsNavigation,
         state = state,
-        onShowDialogClick = {
-            viewModel.startSync()
-        },
         onLogoutClick = viewModel::logout,
     )
 }
@@ -67,7 +64,6 @@ fun SettingsScreenContent(
     settingsNavigation: SettingsNavigation? = null,
     state: SettingsState = SettingsState(),
     onLogoutClick: () -> Unit = {},
-    onShowDialogClick: () -> Unit = {},
 ) {
     Surface(
         Modifier
@@ -89,28 +85,7 @@ fun SettingsScreenContent(
                 SettingGroup(settingProvider, { settingsNavigation?.navigateTo(it) })
             }
 
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .background(MaterialTheme.colorScheme.surfaceContainer, shape = RoundedCornerShape(8.dp))
-                    .padding(8.dp)
-            ) {
-                Text(text = "Database", Modifier.padding(4.dp), style = MaterialTheme.typography.labelLarge)
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(4.dp)
-                        .clickable { onShowDialogClick() }
-                        .background(MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(8.dp))
-                        .padding(16.dp)
-                ) {
 
-                    Icon(Icons.Filled.Refresh, "")
-                    Text(text = "Sync", Modifier.weight(1f))
-                }
-
-            }
             Spacer(Modifier.weight(1f))
             Button(
                 modifier = Modifier

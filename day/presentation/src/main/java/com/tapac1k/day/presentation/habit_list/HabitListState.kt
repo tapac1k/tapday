@@ -1,7 +1,5 @@
 package com.tapac1k.day.presentation.habit_list
 
-import android.app.DownloadManager.Query
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.ui.text.input.TextFieldValue
 import com.tapac1k.day.domain.models.Habit
 
@@ -15,6 +13,6 @@ data class HabitListState(
             habit.name.contains(it, true)
         } ?: true
     }
-    val positiveHabits = filteredHabits.filter { it.isPositive }
-    val negativeHabits = filteredHabits.filter { !it.isPositive }
+    val positiveHabits = filteredHabits.filter { it.isPositive }.sortedBy { it.name }
+    val negativeHabits = filteredHabits.filter { !it.isPositive }.sortedBy { it.name }
 }
