@@ -32,9 +32,9 @@ fun DocumentSnapshot.readExercise(tagMap: Map<String, TrainingTag>): Exercise {
 fun DocumentSnapshot.readExerciseGroup(exerciseMap: Map<String, Exercise>): ExerciseGroup {
     val exercise = exerciseMap[getField<DocumentReference>("exerciseRef")!!.id]
     val date = getField<Long>("date")!!
-    val sets = (get("sets") as? List<Map<String, Any>>).orEmpty().map {
+    val sets = (get("sets") as? List<Map<String, Any>>).orEmpty().mapIndexed { index, it ->
         ExerciseSet(
-            id = "",
+            id = "$index",
             reps = (it["reps"] as? Long)?.toInt(),
             weight = (it["weight"] as? Double)?.toFloat(),
             time = (it["time"] as? Long)?.toInt()

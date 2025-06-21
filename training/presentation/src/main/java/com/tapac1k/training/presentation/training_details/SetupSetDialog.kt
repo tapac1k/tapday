@@ -1,7 +1,9 @@
 package com.tapac1k.training.presentation.training_details
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,17 +58,24 @@ fun SetupSetDialog(
                 )
         ) {
             if (withWeight) {
-                TextField(
-                    currentWeight, { currentWeight = it },
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    placeholder = {
-                        Text("Weight")
-                    },
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    TextField(
+                        currentWeight, { currentWeight = it },
+                        Modifier
+                            .weight(1f)
+                            .padding(8.dp),
+                        placeholder = {
+                            Text("Weight")
+                        },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Number),
+                    )
 
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Number),
-                )
+                    val lbs = String.format("%.2f", currentWeight.toWeightFloat()?.let { (it * 2.20462f) } ?: 0f)
+                    Text("$lbs lbs", Modifier.padding(8.dp).clickable {
+                        currentWeight = String.format("%.2f", currentWeight.toWeightFloat()?.let { (it / 2.20462f) } ?: 0f)
+                    }, style = MaterialTheme.typography.bodyMedium, )
+                }
+
             }
             if (timeBased) {
                 TextField(
@@ -106,4 +115,8 @@ fun SetupSetDialog(
             }
         }
     }
+
+}
+fun String.toWeightFloat(): Float? {
+    return this.trim().replace(",", ".").toFloatOrNull()
 }
