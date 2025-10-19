@@ -46,6 +46,7 @@ fun ExerciseGroupItem(
     Column(
         Modifier
             .fillMaxWidth()
+            .clickable {  }
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .background(MaterialTheme.colorScheme.surfaceContainer, shape = RoundedCornerShape(8.dp))
             .padding(8.dp)

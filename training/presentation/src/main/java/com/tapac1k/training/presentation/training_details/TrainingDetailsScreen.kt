@@ -1,22 +1,32 @@
 package com.tapac1k.training.presentation.training_details
 
 import android.content.res.Configuration
+import android.widget.Space
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.EditCalendar
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.capitalize
@@ -33,9 +43,11 @@ import com.tapac1k.training.contract.Exercise
 import com.tapac1k.training.contract.ExerciseGroup
 import com.tapac1k.training.contract.ExerciseSet
 import com.tapac1k.training.contract.TrainingTag
+import com.tapac1k.training.presentation.tag.TrainingTagEvent
 import com.tapac1k.training.presentation.widget.ExerciseGroupItem
 import com.tapac1k.training.presentation.widget.dateFormat
 import com.tapac1k.training.presentation.widget.dateFullFormat
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun TrainingDetailsScreen(
@@ -43,12 +55,23 @@ fun TrainingDetailsScreen(
     onBack: () -> Unit = { },
     onNewExerciseGroup: () -> Unit = { },
     onExerciseHistory: (String) -> Unit = { },
+    onReplaceExercise:  (String) -> Unit = { },
+    showToast: (String) -> Unit = { }
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LifecycleEffect(LocalLifecycleOwner.current, onStop = {
+    LifecycleEffect(LocalLifecycleOwner.current, onPause = {
         viewModel.saveTraining()
     })
+    LaunchedEffect("events") {
+        viewModel.events.collectLatest {
+            when(it) {
+                TrainingDetailsEvent.Finish -> onBack()
+                is TrainingDetailsEvent.ReplaceExercise -> onReplaceExercise(it.exerciseGroupId)
+                is TrainingDetailsEvent.ShowToast -> showToast(it.message)
+            }
+        }
+    }
     state.dialogState?.let {
         TrainingDetailsDispatchDialog(it, viewModel::requestUpdateState)
     }
@@ -153,25 +176,44 @@ fun TrainingDetailsScreenContent(
         LazyColumn(contentPadding = paddingValues) {
             items(state.exercises.count(), { state.exercises[it].id }) {
                 val exercise = state.exercises[it]
-                ExerciseGroupItem(
-                    exerciseGroup = exercise,
-                    isHistoryItem = false,
-                    onAddSet = {
-                        updater.invoke(TrainingDetailsUpdater.AddSet(exercise))
-                    },
-                    onEditSet = { set ->
-                        updater.invoke(TrainingDetailsUpdater.EditSet(exercise, set))
-                    },
-                    onExerciseClick = {
-                        onExerciseHistory(exercise.exercise.id)
+                val dismissState = rememberSwipeToDismissBoxState(confirmValueChange = {
+
+                    false
+                })
+                SwipeToDismissBox(state = dismissState, backgroundContent = {
+                    Spacer(Modifier.size(20.dp))
+                    IconButton(onClick = {
+                        updater.invoke(TrainingDetailsUpdater.RequestReplaceExercise(exercise.id))
+                    }, modifier = Modifier.align(Alignment.CenterVertically).padding(20.dp).size(20.dp)) {
+                        Icon(Icons.Rounded.Edit, contentDescription = "Edit Exercise",)
                     }
-                )
+
+                    IconButton(onClick = {
+                        updater.invoke(TrainingDetailsUpdater.ConfirmRemoveExercise(exercise.id))
+                    }, modifier = Modifier.align(Alignment.CenterVertically).padding(20.dp).size(20.dp)) {
+                        Icon(Icons.Rounded.Delete, contentDescription = "Delete Exercise",)
+                    }
+                }, modifier = Modifier.fillMaxWidth()) {
+                    ExerciseGroupItem(
+                        exerciseGroup = exercise,
+                        isHistoryItem = false,
+                        onAddSet = {
+                            updater.invoke(TrainingDetailsUpdater.AddSet(exercise))
+                        },
+                        onEditSet = { set ->
+                            updater.invoke(TrainingDetailsUpdater.EditSet(exercise, set))
+                        },
+                        onExerciseClick = {
+                            onExerciseHistory(exercise.exercise.id)
+                        }
+                    )
+                }
+
             }
 
         }
     }
 }
-
 
 
 @Composable

@@ -24,6 +24,11 @@ data class ExerciseSelectionRoute(
 )
 
 @Serializable
+data class ExerciseReplaceRoute(
+    val replaceExerciseGroupId: String,
+)
+
+@Serializable
 data class ExerciseDetailsRoute(
     val exerciseId: String? = null,
 )

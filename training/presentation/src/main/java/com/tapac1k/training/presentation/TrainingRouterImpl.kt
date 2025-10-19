@@ -6,12 +6,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
+import androidx.navigation.toRoute
 import com.tapac1k.compose.safeNavigate
 import com.tapac1k.training.contract.TrainingTag
 import com.tapac1k.training.contract_ui.ExerciseDetailsRoute
 import com.tapac1k.training.contract_ui.ExerciseHistoryRoute
 import com.tapac1k.training.contract_ui.ExerciseListNavigation
 import com.tapac1k.training.contract_ui.ExerciseListRoute
+import com.tapac1k.training.contract_ui.ExerciseReplaceRoute
 import com.tapac1k.training.contract_ui.ExerciseSelectionRoute
 import com.tapac1k.training.contract_ui.TrainingDetailsRoute
 import com.tapac1k.training.contract_ui.TrainingListNavigation
@@ -27,6 +29,7 @@ import com.tapac1k.training.presentation.exercise_list.ExerciseSelectionScreen
 import com.tapac1k.training.presentation.tag.TagDialogScreen
 import com.tapac1k.training.presentation.tags.TrainingTagsScreen
 import com.tapac1k.training.presentation.training_details.TrainingDetailsScreen
+import com.tapac1k.training.presentation.training_details.TrainingDetailsUpdater
 import com.tapac1k.training.presentation.training_details.TrainingDetailsViewModel
 import com.tapac1k.training.presentation.training_list.TrainingListScreen
 import com.tapac1k.utils.common.WithBackNavigation
@@ -86,6 +89,9 @@ class TrainingRouterImpl @Inject constructor(
                 },
                 onExerciseHistory = {
                     navController.safeNavigate(TrainingDetailsRoute::class, ExerciseHistoryRoute(it))
+                },
+                onReplaceExercise = {
+                    navController.safeNavigate(TrainingDetailsRoute::class, ExerciseReplaceRoute(it))
                 }
             )
         }
@@ -95,7 +101,7 @@ class TrainingRouterImpl @Inject constructor(
             }
             val viewModel = hiltViewModel<TrainingDetailsViewModel>(parentEntry)
             ExerciseSelectionScreen(
-                viewModel,
+                { viewModel.requestUpdateState(TrainingDetailsUpdater.AddExercise(it)) },
                 hiltViewModel(),
                 object : ExerciseListNavigation, WithBackNavigation by defaultBackController {
                     override fun openExerciseDetails(exerciseId: String) {
@@ -104,6 +110,31 @@ class TrainingRouterImpl @Inject constructor(
 
                     override fun openCreateExercise() {
                         navController.safeNavigate(ExerciseSelectionRoute::class, ExerciseDetailsRoute())
+                    }
+                }
+            )
+        }
+        composable<ExerciseReplaceRoute> {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry<TrainingDetailsRoute>()
+            }
+            val viewModel = hiltViewModel<TrainingDetailsViewModel>(parentEntry)
+            ExerciseSelectionScreen(
+                { exercise ->
+                    viewModel.requestUpdateState(TrainingDetailsUpdater.ReplaceExercise(
+                        exerciseGroupId = it.toRoute<ExerciseReplaceRoute>().replaceExerciseGroupId,
+                        nexExercise = exercise
+                    )
+                    )
+                },
+                hiltViewModel(),
+                object : ExerciseListNavigation, WithBackNavigation by defaultBackController {
+                    override fun openExerciseDetails(exerciseId: String) {
+                        navController.safeNavigate(ExerciseReplaceRoute::class, ExerciseDetailsRoute(exerciseId))
+                    }
+
+                    override fun openCreateExercise() {
+                        navController.safeNavigate(ExerciseReplaceRoute::class, ExerciseDetailsRoute())
                     }
                 }
             )

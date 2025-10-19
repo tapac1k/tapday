@@ -46,7 +46,7 @@ class DayViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         dayActivity = result.dayActivity,
-                        description = TextFieldValue(result.description),
+                        description = result.description,
                         loading = false,
                         habitsData = it.habitsData.toMutableMap().apply {
                             result.habitsData.forEach { habitData ->
@@ -112,7 +112,7 @@ class DayViewModel @Inject constructor(
                     saveDayUseCase.invoke(
                         day = day.day,
                         dayActivity = it.dayActivity,
-                        description = it.description.text,
+                        description = it.description,
                         habitsData = it.habitsData.entries.map {
                             HabitData(
                                 habit = it.key,

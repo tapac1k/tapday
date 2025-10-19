@@ -7,7 +7,7 @@ import com.tapac1k.day.domain.models.HabitData
 
 data class DayState(
     val dayActivity: DayActivity = DayActivity(),
-    val description: TextFieldValue = TextFieldValue(""),
+    val description: String = "",
     val habitsData: Map<Habit, Int> = emptyMap(),
     val loading: Boolean = true,
 ) {

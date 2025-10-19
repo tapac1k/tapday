@@ -137,7 +137,11 @@ class TrainingDetailsViewModel @Inject constructor(
             }
             is TrainingDetailsUpdater.RemoveExercise -> TODO()
             is TrainingDetailsUpdater.DeleteSet -> TODO()
-            is TrainingDetailsUpdater.ConfirmRemoveExercise -> TODO()
+            is TrainingDetailsUpdater.ConfirmRemoveExercise -> _state.update { state ->
+                state.copy(
+                    exercises = state.exercises.filter { it.id != updater.exerciseGroupId }
+                )
+            }
             is TrainingDetailsUpdater.UpdateDate -> {
                 _state.update {
                     it.copy(date = updater.date)
@@ -146,6 +150,26 @@ class TrainingDetailsViewModel @Inject constructor(
             is TrainingDetailsUpdater.UpdateDescription -> {
                 _state.update {
                     it.copy(description = updater.description)
+                }
+            }
+
+            is TrainingDetailsUpdater.ReplaceExercise -> {
+                _state.update {
+                    it.copy(
+                        exercises = it.exercises.map { group ->
+                            if (group.id == updater.exerciseGroupId) {
+                                group.copy(exercise = updater.nexExercise)
+                            } else {
+                                group
+                            }
+                        }
+                    )
+                }
+            }
+
+            is TrainingDetailsUpdater.RequestReplaceExercise -> {
+                launch {
+                    _events.emit(TrainingDetailsEvent.ReplaceExercise(updater.exercieGroupId))
                 }
             }
         }

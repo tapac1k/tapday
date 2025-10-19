@@ -30,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tapac1k.compose.theme.TapMyDayTheme
 import com.tapac1k.compose.widgets.TopBarWithSearch
 import com.tapac1k.training.contract.Exercise
+import com.tapac1k.training.contract.TrainingTag
 import com.tapac1k.training.contract_ui.ExerciseListNavigation
 import com.tapac1k.training.presentation.training_details.TrainingDetailsUpdater
 import com.tapac1k.training.presentation.training_details.TrainingDetailsViewModel
@@ -52,7 +53,7 @@ fun ExerciseListScreen(
 
 @Composable
 fun ExerciseSelectionScreen(
-    trainingDetailsViewModel: TrainingDetailsViewModel = viewModel(),
+    onExerciseClick: (Exercise) -> Unit = {},
     viewModel: ExerciseListViewModel = viewModel(),
     navigation: ExerciseListNavigation
 ) {
@@ -60,7 +61,7 @@ fun ExerciseSelectionScreen(
     ExerciseListScreenContent(
         state = state,
         onExerciseClick = {
-            trainingDetailsViewModel.requestUpdateState(TrainingDetailsUpdater.AddExercise(it))
+            onExerciseClick(it)
             navigation.onBack()
         },
         onAddExerciseClick = navigation::openCreateExercise,
@@ -139,7 +140,13 @@ fun ExerciseListScreenContent(
 @Composable
 fun ExerciseListScreenPreview() {
     TapMyDayTheme {
-        ExerciseListScreenContent()
+        ExerciseListScreenContent(
+            state = ExerciseListState(
+                listOf(
+                    Exercise("1", "Push Ups", listOf("chest", "arms").map { TrainingTag(it, it) }, true, true),
+                )
+            )
+        )
     }
 }
 

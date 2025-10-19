@@ -27,13 +27,16 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -105,6 +108,7 @@ fun DayScreenContent(
                 .fillMaxSize()
                 .consumeWindowInsets(padding)
         ) {
+
             item("Rings") {
                 if (editActivity) {
                     ActivityRings(
@@ -132,13 +136,13 @@ fun DayScreenContent(
             }
             item("Good habits") {
                 SectionTitle("Good habits", collapsedPositiveHabits, modifier = Modifier.animateItem()) {
-                   onCreateHabit(true)
+                    onCreateHabit(true)
                 }
             }
             if (!collapsedPositiveHabits.value) {
                 items(dayState.positive.size, { dayState.positive[it].habit.id }) { index ->
                     val habit = dayState.positive[index]
-                    HabitState(habit) { stateUpdater.invoke(StateUpdate.ToggleHabitState(habit.habit))}
+                    HabitState(habit) { stateUpdater.invoke(StateUpdate.ToggleHabitState(habit.habit)) }
                 }
             }
 
@@ -150,10 +154,12 @@ fun DayScreenContent(
             if (!collapsedNegativeHabits.value) {
                 items(dayState.negative.size, { dayState.negative[it].habit.id }) { index ->
                     val habit = dayState.negative[index]
-                    HabitState(habit) { stateUpdater.invoke(StateUpdate.ToggleHabitState(habit.habit))}
+                    HabitState(habit) { stateUpdater.invoke(StateUpdate.ToggleHabitState(habit.habit)) }
                 }
             }
+             
         }
+
     }
 }
 
@@ -165,7 +171,7 @@ private fun LazyItemScope.HabitState(
     Row(
         Modifier
             .animateItem()
-            .clickable { onClick()}) {
+            .clickable { onClick() }) {
         Text(
             habit.habit.name.capitalize(Locale.current),
             modifier = Modifier
@@ -193,8 +199,7 @@ private fun SectionTitle(
 ) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
         Text(
-            title
-            , modifier = Modifier
+            title, modifier = Modifier
                 .padding(16.dp)
                 .weight(1f), style = MaterialTheme.typography.headlineSmall
         )
@@ -223,14 +228,21 @@ private fun CollapseIcon(
 
 @Composable
 private fun DescriptionText(
-    description: TextFieldValue,
+    description: String,
     modifier: Modifier = Modifier,
-    updateText: (TextFieldValue) -> Unit = {},
+    updateText: (String) -> Unit = {},
 ) {
+    var text by remember { mutableStateOf(TextFieldValue(description)) }
+    LaunchedEffect(description) {
+        if (description.length != text.text.length) {
+            text = TextFieldValue(description, TextRange(description.length))
+        }
+    }
     OutlinedTextField(
-        value = description,
+        value = text,
         onValueChange = {
-            updateText(it)
+            text = it
+            updateText(it.text)
         },
         keyboardOptions = KeyboardOptions(autoCorrectEnabled = false, capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text),
         modifier = modifier

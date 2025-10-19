@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.tapac1k.training.contract.ExerciseSet
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,9 +71,9 @@ fun SetupSetDialog(
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Number),
                     )
 
-                    val lbs = String.format("%.2f", currentWeight.toWeightFloat()?.let { (it * 2.20462f) } ?: 0f)
+                    val lbs = String.format(Locale.US, "%.2f", currentWeight.toWeightFloat()?.let { (it * 2.20462f) } ?: 0f)
                     Text("$lbs lbs", Modifier.padding(8.dp).clickable {
-                        currentWeight = String.format("%.2f", currentWeight.toWeightFloat()?.let { (it / 2.20462f) } ?: 0f)
+                        currentWeight = String.format(Locale.US, "%.2f", currentWeight.toWeightFloat()?.let { (it / 2.20462f) } ?: 0f)
                     }, style = MaterialTheme.typography.bodyMedium, )
                 }
 

@@ -10,18 +10,26 @@ sealed interface TrainingDetailsUpdater {
         val exercise: Exercise,
     ) : ChangeTraingingUpdater
 
+    data class ReplaceExercise(
+        val exerciseGroupId: String,
+        val nexExercise: Exercise,
+    ) : ChangeTraingingUpdater
     data class AddSet(
         val exerciseGroup: ExerciseGroup
-    ) : TrainingDetailsUpdater
+    ) : ChangeTraingingUpdater
 
     data class EditSet(
         val exerciseGroup: ExerciseGroup,
         val exerciseSet: ExerciseSet,
-    ) : TrainingDetailsUpdater
+    ) : ChangeTraingingUpdater
 
     data object DeleteSet : TrainingDetailsUpdater
     data object RemoveExercise : TrainingDetailsUpdater
-    data object ConfirmRemoveExercise : ChangeTraingingUpdater
+
+    data class ConfirmRemoveExercise(
+        val exerciseGroupId: String
+    ) : ChangeTraingingUpdater
+
     data object DismissDialogs : TrainingDetailsUpdater
 
     data class UpdateDescription(
@@ -39,6 +47,8 @@ sealed interface TrainingDetailsUpdater {
         val reps: Int?,
         val weight: Float?,
     ) : ChangeTraingingUpdater
+
+    data class RequestReplaceExercise(val exercieGroupId: String) : TrainingDetailsUpdater
 
     data object ShowDatePicker : TrainingDetailsUpdater
     data object ShowDescriptionDialog : TrainingDetailsUpdater
